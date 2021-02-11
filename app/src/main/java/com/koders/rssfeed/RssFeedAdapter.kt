@@ -1,5 +1,8 @@
 package com.koders.rssfeed
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.prof.rssparser.Article
 import com.squareup.picasso.Picasso
 
-class RssFeedAdapter(private val rssFeedList: MutableList<Article>) :
+class RssFeedAdapter(private val context: Context, private val rssFeedList: MutableList<Article>) :
     RecyclerView.Adapter<RssFeedAdapter.RssFeedHolder>() {
 
     inner class RssFeedHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -32,7 +35,8 @@ class RssFeedAdapter(private val rssFeedList: MutableList<Article>) :
         Picasso.get().load(rssFeed.image).into(holder.thumbnail)
 
         holder.itemView.setOnClickListener {
-            Log.d("RssFeedAdapter", "Item $position clicked")
+            // open external browser with item link
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(rssFeed.link)))
         }
     }
 }

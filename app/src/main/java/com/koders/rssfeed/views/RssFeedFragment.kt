@@ -38,7 +38,8 @@ class RssFeedFragment : Fragment() {
         viewModel.getFeed()
 
         viewModel.rssFeedList.observe(viewLifecycleOwner, Observer {
-            rssFeedAdapter = RssFeedAdapter(it)
+            rssFeedAdapter = RssFeedAdapter(requireActivity(), it)
+            feedRecyclerView.smoothScrollToPosition(0)
             feedRecyclerView.adapter = rssFeedAdapter
         })
 

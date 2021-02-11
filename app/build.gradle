@@ -64,4 +64,10 @@ dependencies {
 
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // Facebook ads
+    implementation 'com.facebook.android:audience-network-sdk:6.2.1'
+
+    // AdMob ads
+    implementation 'com.google.android.gms:play-services-ads:19.7.0'
 }
