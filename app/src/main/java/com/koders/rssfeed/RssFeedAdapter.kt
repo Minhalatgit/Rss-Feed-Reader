@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.prof.rssparser.Article
 import com.squareup.picasso.Picasso
 
-class RssFeedAdapter(private val rssFeedList: ArrayList<Article>) :
+class RssFeedAdapter(private val rssFeedList: MutableList<Article>) :
     RecyclerView.Adapter<RssFeedAdapter.RssFeedHolder>() {
 
     inner class RssFeedHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

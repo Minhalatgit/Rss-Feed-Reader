@@ -1,24 +1,19 @@
-package com.koders.rssfeed
+package com.koders.rssfeed.views
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
-import androidx.navigation.ui.NavigationUI
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.koders.rssfeed.R
+import com.koders.rssfeed.RssFeedAdapter
+import com.koders.rssfeed.RssFeedViewModel
 import com.koders.rssfeed.databinding.FragmentRssFeedBinding
 import com.prof.rssparser.Article
-import com.prof.rssparser.Parser
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-
-private const val TAG = "RssFeedFragment"
 
 class RssFeedFragment : Fragment() {
 
@@ -26,7 +21,7 @@ class RssFeedFragment : Fragment() {
     private lateinit var rssFeedAdapter: RssFeedAdapter
     private var rssFeedList = ArrayList<Article>()
 
-    private lateinit var parser: Parser
+    private lateinit var viewModel: RssFeedViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,32 +32,17 @@ class RssFeedFragment : Fragment() {
         setHasOptionsMenu(true)
 
         feedRecyclerView = binding.feedRecyclerView
-        rssFeedAdapter = RssFeedAdapter(rssFeedList)
         feedRecyclerView.layoutManager = LinearLayoutManager(context)
-        feedRecyclerView.adapter = rssFeedAdapter
 
-        parser = Parser.Builder()
-            .context(requireActivity())
-            // If you want to provide a custom charset (the default is utf-8):
-            // .charset(Charset.forName("ISO-8859-7"))
-            .cacheExpirationMillis(24L * 60L * 60L * 100L) // one day
-            .build()
+        viewModel = ViewModelProvider(this).get(RssFeedViewModel::class.java)
+        viewModel.getFeed()
 
-        getFeed()
+        viewModel.rssFeedList.observe(viewLifecycleOwner, Observer {
+            rssFeedAdapter = RssFeedAdapter(it)
+            feedRecyclerView.adapter = rssFeedAdapter
+        })
 
         return binding.root
-    }
-
-    private fun getFeed() {
-        GlobalScope.launch {
-            val channel =
-                parser.getChannel("https://tools.shophermedia.net/gc-rss.asp?cp=2&afid=357373")
-            Log.d(TAG, "onCreate: ${channel.articles}")
-            rssFeedList.addAll(channel.articles)
-            withContext(Dispatchers.Main) {
-                rssFeedAdapter.notifyDataSetChanged()
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -75,7 +55,7 @@ class RssFeedFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.reload -> getFeed()
+            R.id.reload -> viewModel.getFeed()
             R.id.shareApp -> startActivity(getShareIntent())
             R.id.notification -> Toast.makeText(activity, "Notification", Toast.LENGTH_SHORT).show()
         }
