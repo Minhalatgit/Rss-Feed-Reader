@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.prof.rssparser.Article
+import com.squareup.picasso.Picasso
 
-class RssFeedAdapter(private val rssFeedList: ArrayList<RssFeed>) :
+class RssFeedAdapter(private val rssFeedList: ArrayList<Article>) :
     RecyclerView.Adapter<RssFeedAdapter.RssFeedHolder>() {
 
     inner class RssFeedHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -27,7 +29,7 @@ class RssFeedAdapter(private val rssFeedList: ArrayList<RssFeed>) :
         val rssFeed = rssFeedList[position]
 
         holder.title.text = rssFeed.title
-        holder.thumbnail.setImageResource(rssFeed.thumbnail)
+        Picasso.get().load(rssFeed.image).into(holder.thumbnail)
 
         holder.itemView.setOnClickListener {
             Log.d("RssFeedAdapter", "Item $position clicked")

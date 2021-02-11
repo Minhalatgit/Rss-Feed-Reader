@@ -11,9 +11,12 @@ import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.koders.rssfeed.databinding.FragmentRssFeedBinding
+import com.prof.rssparser.Article
 import com.prof.rssparser.Parser
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private const val TAG = "RssFeedFragment"
 
@@ -21,7 +24,7 @@ class RssFeedFragment : Fragment() {
 
     private lateinit var feedRecyclerView: RecyclerView
     private lateinit var rssFeedAdapter: RssFeedAdapter
-    private var rssFeedList = ArrayList<RssFeed>()
+    private var rssFeedList = ArrayList<Article>()
 
     private lateinit var parser: Parser
 
@@ -32,17 +35,6 @@ class RssFeedFragment : Fragment() {
     ): View? {
         val binding = FragmentRssFeedBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
-
-        rssFeedList.add(RssFeed("test", R.mipmap.ic_launcher_round))
-        rssFeedList.add(RssFeed("test", R.mipmap.ic_launcher_round))
-        rssFeedList.add(RssFeed("test", R.mipmap.ic_launcher_round))
-        rssFeedList.add(RssFeed("test", R.mipmap.ic_launcher_round))
-        rssFeedList.add(RssFeed("test", R.mipmap.ic_launcher_round))
-        rssFeedList.add(RssFeed("test", R.mipmap.ic_launcher_round))
-        rssFeedList.add(RssFeed("test", R.mipmap.ic_launcher_round))
-        rssFeedList.add(RssFeed("test", R.mipmap.ic_launcher_round))
-        rssFeedList.add(RssFeed("test", R.drawable.share_icon))
-        rssFeedList.add(RssFeed("test", R.drawable.share_icon))
 
         feedRecyclerView = binding.feedRecyclerView
         rssFeedAdapter = RssFeedAdapter(rssFeedList)
@@ -56,12 +48,21 @@ class RssFeedFragment : Fragment() {
             .cacheExpirationMillis(24L * 60L * 60L * 100L) // one day
             .build()
 
+        getFeed()
+
+        return binding.root
+    }
+
+    private fun getFeed() {
         GlobalScope.launch {
             val channel =
                 parser.getChannel("https://tools.shophermedia.net/gc-rss.asp?cp=2&afid=357373")
             Log.d(TAG, "onCreate: ${channel.articles}")
+            rssFeedList.addAll(channel.articles)
+            withContext(Dispatchers.Main) {
+                rssFeedAdapter.notifyDataSetChanged()
+            }
         }
-        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -74,7 +75,7 @@ class RssFeedFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.reload -> Toast.makeText(activity, "Reload feed", Toast.LENGTH_SHORT).show()
+            R.id.reload -> getFeed()
             R.id.shareApp -> startActivity(getShareIntent())
             R.id.notification -> Toast.makeText(activity, "Notification", Toast.LENGTH_SHORT).show()
         }
