@@ -17,7 +17,7 @@ class RssFeedAdapter(private val context: Context, private val rssFeedList: Muta
     RecyclerView.Adapter<RssFeedAdapter.RssFeedHolder>() {
 
     inner class RssFeedHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val title: TextView = itemView.findViewById(R.id.title)
+        val date: TextView = itemView.findViewById(R.id.date)
         val thumbnail: ImageView = itemView.findViewById(R.id.thumbnail)
     }
 
@@ -31,7 +31,7 @@ class RssFeedAdapter(private val context: Context, private val rssFeedList: Muta
     override fun onBindViewHolder(holder: RssFeedHolder, position: Int) {
         val rssFeed = rssFeedList[position]
 
-        holder.title.text = rssFeed.title
+        holder.date.text = rssFeed.pubDate
         Picasso.get().load(rssFeed.image).into(holder.thumbnail)
 
         holder.itemView.setOnClickListener {

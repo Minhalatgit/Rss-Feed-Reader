@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.koders.rssfeed.R
@@ -33,6 +34,7 @@ class RssFeedFragment : Fragment() {
 
         feedRecyclerView = binding.feedRecyclerView
         feedRecyclerView.layoutManager = LinearLayoutManager(context)
+//        feedRecyclerView.layoutManager = GridLayoutManager(activity, 2)
 
         viewModel = ViewModelProvider(this).get(RssFeedViewModel::class.java)
         viewModel.getFeed()
