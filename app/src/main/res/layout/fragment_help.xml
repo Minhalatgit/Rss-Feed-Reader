@@ -10,20 +10,20 @@
         android:padding="10dp"
         tools:context=".views.HelpFragment">
 
-        <TextView
-            android:id="@+id/heading"
+        <at.blogc.android.views.ExpandableTextView
+            android:id="@+id/expandableTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Help"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:text="@string/dummy_text"
+            android:maxLines="3"
+            android:ellipsize="end"
+            app:animation_duration="500"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:visibility="gone"
             android:text="@string/dummy_text"
             android:textSize="16sp" />
     </LinearLayout>

@@ -11,16 +11,6 @@
         tools:context=".views.RssFeedFragment">
 
         <TextView
-            android:id="@+id/heading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="About RSS Feed Reader"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

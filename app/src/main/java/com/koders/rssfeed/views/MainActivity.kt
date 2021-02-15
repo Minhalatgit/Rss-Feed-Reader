@@ -2,9 +2,11 @@ package com.koders.rssfeed.views
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
+import androidx.core.view.isGone
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -26,10 +28,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding =
-            DataBindingUtil.setContentView<ActivityMainBinding>(
-                this,
-                R.layout.activity_main
-            )
+                DataBindingUtil.setContentView<ActivityMainBinding>(
+                        this,
+                        R.layout.activity_main
+                )
 
         // Fb ads
         // TODO: Need to replace with placement id with original id
@@ -39,10 +41,9 @@ class MainActivity : AppCompatActivity() {
 
         // AdMob ads
         // TODO: Need to replace with unit id with original id
-        //binding.adMobView.adUnitId = "ca-app-pub-3940256099942544/6300978111"
-        //binding.adMobView.adSize = com.google.android.gms.ads.AdSize.BANNER
         val adRequest = AdRequest.Builder().build()
         binding.adMobView.loadAd(adRequest)
+        //binding.adMobView.visibility = View.GONE
 
         drawerLayout = binding.drawerLayout
         navView = binding.navView
@@ -74,18 +75,17 @@ class MainActivity : AppCompatActivity() {
         builder.setMessage("Are you enjoying our app? Please give us a review.")
         builder.setIcon(R.drawable.rss)
 
-        builder.setPositiveButton("Yes") { _, _ ->
+        builder.setPositiveButton("Rate now") { _, _ ->
             Toast.makeText(
-                applicationContext,
-                "It will open Play store when live",
-                Toast.LENGTH_LONG
+                    applicationContext,
+                    "It will open Play store when live",
+                    Toast.LENGTH_LONG
             ).show()
         }
-        builder.setNegativeButton("No") { dialog, _ ->
+        builder.setNegativeButton("Cancel") { dialog, _ ->
             dialog.cancel()
         }
         val alertDialog: AlertDialog = builder.create()
-        alertDialog.setCancelable(false)
         alertDialog.show()
     }
 

@@ -70,4 +70,7 @@ dependencies {
 
     // AdMob ads
     implementation 'com.google.android.gms:play-services-ads:19.7.0'
+
+    // Expandable text view
+    implementation 'at.blogc:expandabletextview:1.0.5'
 }
