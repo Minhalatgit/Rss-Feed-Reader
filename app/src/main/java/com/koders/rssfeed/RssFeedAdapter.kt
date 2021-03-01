@@ -3,7 +3,6 @@ package com.koders.rssfeed
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +30,7 @@ class RssFeedAdapter(private val context: Context, private val rssFeedList: Muta
     override fun onBindViewHolder(holder: RssFeedHolder, position: Int) {
         val rssFeed = rssFeedList[position]
 
-        holder.date.text = rssFeed.pubDate
+        holder.date.text = rssFeed.pubDate + " " + position
         Picasso.get().load(rssFeed.image).into(holder.thumbnail)
 
         holder.itemView.setOnClickListener {

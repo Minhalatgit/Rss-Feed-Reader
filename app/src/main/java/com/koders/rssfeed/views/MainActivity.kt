@@ -1,5 +1,6 @@
 package com.koders.rssfeed.views
 
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -28,22 +29,23 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding =
-                DataBindingUtil.setContentView<ActivityMainBinding>(
-                        this,
-                        R.layout.activity_main
-                )
+            DataBindingUtil.setContentView<ActivityMainBinding>(
+                this,
+                R.layout.activity_main
+            )
 
         // Fb ads
         // TODO: Need to replace with placement id with original id
         adView = AdView(this, "IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID", AdSize.BANNER_HEIGHT_50)
         binding.fbAddBanner.addView(adView)
         adView.loadAd()
+//        binding.fbAddBanner.visibility = View.GONE
 
         // AdMob ads
         // TODO: Need to replace with unit id with original id
         val adRequest = AdRequest.Builder().build()
         binding.adMobView.loadAd(adRequest)
-        //binding.adMobView.visibility = View.GONE
+//        binding.adMobView.visibility = View.GONE
 
         drawerLayout = binding.drawerLayout
         navView = binding.navView
@@ -77,9 +79,9 @@ class MainActivity : AppCompatActivity() {
 
         builder.setPositiveButton("Rate now") { _, _ ->
             Toast.makeText(
-                    applicationContext,
-                    "It will open Play store when live",
-                    Toast.LENGTH_LONG
+                applicationContext,
+                "It will open Play store when live",
+                Toast.LENGTH_LONG
             ).show()
         }
         builder.setNegativeButton("Cancel") { dialog, _ ->

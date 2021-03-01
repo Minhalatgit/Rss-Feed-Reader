@@ -17,7 +17,7 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
         .context(application)
         // If you want to provide a custom charset (the default is utf-8):
         // .charset(Charset.forName("ISO-8859-7"))
-        .cacheExpirationMillis(24L * 60L * 60L * 100L) // one day
+        //.cacheExpirationMillis(24L * 60L * 60L * 100L) // one day
         .build()
 
     private var _rssFeedList = MutableLiveData<MutableList<Article>>()

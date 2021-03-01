@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 }
 
 android {
@@ -73,4 +74,7 @@ dependencies {
 
     // Expandable text view
     implementation 'at.blogc:expandabletextview:1.0.5'
+
+    // OneSignal SDK
+    implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
 }

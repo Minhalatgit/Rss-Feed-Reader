@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "45950249139",
+    "project_id": "rss-feed-reader-57044",
+    "storage_bucket": "rss-feed-reader-57044.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:45950249139:android:efc0c342cf5513fbeb68c6",
+        "android_client_info": {
+          "package_name": "com.koders.rssfeed"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "45950249139-ed8sg6csa7c8l3kcc4n6gsdfo90ki5jl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOUQPfhSxRG_npFecyOY9lQoLNJwlDxYA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "45950249139-ed8sg6csa7c8l3kcc4n6gsdfo90ki5jl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,7 +1,9 @@
 package com.koders.rssfeed.views
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -33,8 +35,19 @@ class RssFeedFragment : Fragment() {
         setHasOptionsMenu(true)
 
         feedRecyclerView = binding.feedRecyclerView
-        feedRecyclerView.layoutManager = LinearLayoutManager(context)
+//        feedRecyclerView.layoutManager = LinearLayoutManager(context)
 //        feedRecyclerView.layoutManager = GridLayoutManager(activity, 2)
+
+        val orientation = activity?.resources?.configuration?.orientation
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            // code for portrait mode
+            Log.d("ResFeedFragment", "onCreateView: Portrait ")
+            feedRecyclerView.layoutManager = LinearLayoutManager(context)
+        } else {
+            // code for landscape mode
+            Log.d("ResFeedFragment", "onCreateView: Landscape")
+            feedRecyclerView.layoutManager = GridLayoutManager(activity, 2)
+        }
 
         viewModel = ViewModelProvider(this).get(RssFeedViewModel::class.java)
         viewModel.getFeed()
@@ -71,5 +84,16 @@ class RssFeedFragment : Fragment() {
         shareIntent.setType("text/plain")
             .putExtra(Intent.EXTRA_TEXT, "Install the RSS feed app and check your feed")
         return shareIntent
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Log.d("ResFeedFragment", "onConfigurationChanged: Portrait")
+            feedRecyclerView.layoutManager = LinearLayoutManager(context)
+        } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Log.d("ResFeedFragment", "onConfigurationChanged: Landscape")
+            feedRecyclerView.layoutManager = GridLayoutManager(activity, 2)
+        }
     }
 }
