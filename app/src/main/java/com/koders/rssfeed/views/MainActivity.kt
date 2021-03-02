@@ -1,26 +1,30 @@
 package com.koders.rssfeed.views
 
-import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.core.view.isGone
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.facebook.ads.AdSize
+import com.facebook.ads.AdView
+import com.google.android.gms.ads.AdRequest
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.koders.rssfeed.R
 import com.koders.rssfeed.databinding.ActivityMainBinding
-import com.facebook.ads.*
-import com.google.android.gms.ads.AdRequest
-
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
 
@@ -28,27 +32,30 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding =
-            DataBindingUtil.setContentView<ActivityMainBinding>(
-                this,
-                R.layout.activity_main
-            )
-
-        // Fb ads
-        // TODO: Need to replace with placement id with original id
-        adView = AdView(this, "IMG_16_9_APP_INSTALL#YOUR_PLACEMENT_ID", AdSize.BANNER_HEIGHT_50)
-        binding.fbAddBanner.addView(adView)
-        adView.loadAd()
-//        binding.fbAddBanner.visibility = View.GONE
-
-        // AdMob ads
-        // TODO: Need to replace with unit id with original id
-        val adRequest = AdRequest.Builder().build()
-        binding.adMobView.loadAd(adRequest)
-//        binding.adMobView.visibility = View.GONE
-
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         drawerLayout = binding.drawerLayout
         navView = binding.navView
+
+        // Write a message to the database
+        val database = FirebaseDatabase.getInstance()
+        val myRef = database.reference
+
+        myRef.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+                Log.d("MainActivity", "Firebase database failed ${error.message}")
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val firebaseResponse = JSONObject(snapshot.value as Map<*, *>)
+                Log.d("MainActivity", firebaseResponse.toString())
+
+                initAds(
+                    firebaseResponse.getString("fan_placement_id"),
+                    firebaseResponse.getString("admob_id")
+                )
+            }
+        })
+
         val navController = this.findNavController(R.id.navHostFragment)
         NavigationUI.setupWithNavController(navView, navController)
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
@@ -69,6 +76,23 @@ class MainActivity : AppCompatActivity() {
             }
             return@setOnMenuItemClickListener true
         }
+    }
+
+    private fun initAds(fanId: String, adMobId: String) {
+        // Fb ads
+        // TODO: Need to replace with placement id with original id
+        adView = AdView(this, fanId, AdSize.BANNER_HEIGHT_50)
+        binding.fbAddBanner.addView(adView)
+        adView.loadAd()
+//        binding.fbAddBanner.visibility = View.GONE
+
+        // AdMob ads
+        // TODO: Need to replace with unit id with original id
+        val adRequest = AdRequest.Builder().build()
+        binding.adMobView.adSize = com.google.android.gms.ads.AdSize.BANNER
+        binding.adMobView.adUnitId = adMobId
+        binding.adMobView.loadAd(adRequest)
+//        binding.adMobView.visibility = View.GONE
     }
 
     private fun showAlert() {

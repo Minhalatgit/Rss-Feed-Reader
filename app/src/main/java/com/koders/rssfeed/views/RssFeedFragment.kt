@@ -35,8 +35,6 @@ class RssFeedFragment : Fragment() {
         setHasOptionsMenu(true)
 
         feedRecyclerView = binding.feedRecyclerView
-//        feedRecyclerView.layoutManager = LinearLayoutManager(context)
-//        feedRecyclerView.layoutManager = GridLayoutManager(activity, 2)
 
         val orientation = activity?.resources?.configuration?.orientation
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {

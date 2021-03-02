@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import com.facebook.ads.AudienceNetworkAds
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.FirebaseApp
 import com.onesignal.OneSignal
 
 class RssFeedApplication : Application() {
@@ -26,5 +27,7 @@ class RssFeedApplication : Application() {
             Log.d("RssFeedApplication", it.toString())
             it.complete(it.notification)
         }
+
+        FirebaseApp.initializeApp(this)
     }
 }
