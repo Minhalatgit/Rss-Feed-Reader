@@ -2,6 +2,7 @@ package com.koders.rssfeed.views
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +13,10 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.facebook.ads.AdSize
 import com.facebook.ads.AdView
+import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -28,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navView: NavigationView
 
-    private lateinit var adView: AdView
+    private lateinit var fanAdView: AdView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +55,8 @@ class MainActivity : AppCompatActivity() {
 
                 initAds(
                     firebaseResponse.getString("fan_placement_id"),
-                    firebaseResponse.getString("admob_id")
+                    firebaseResponse.getString("admob_id"),
+                    firebaseResponse.getString("ad")
                 )
             }
         })
@@ -78,21 +83,72 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initAds(fanId: String, adMobId: String) {
-        // Fb ads
-        // TODO: Need to replace with placement id with original id
-        adView = AdView(this, fanId, AdSize.BANNER_HEIGHT_50)
-        binding.fbAddBanner.addView(adView)
-        adView.loadAd()
-//        binding.fbAddBanner.visibility = View.GONE
+    private fun initAds(fanId: String, adMobId: String, ad: String) {
+        Log.d("MainActivity", "Init ads with $ad")
 
-        // AdMob ads
-        // TODO: Need to replace with unit id with original id
-        val adRequest = AdRequest.Builder().build()
-        binding.adMobView.adSize = com.google.android.gms.ads.AdSize.BANNER
-        binding.adMobView.adUnitId = adMobId
-        binding.adMobView.loadAd(adRequest)
-//        binding.adMobView.visibility = View.GONE
+        if (ad.equals("fan", true)) {
+            Log.d("MainActivity", "FAN ads")
+            // Fb ads
+            // TODO: Need to replace with placement id with original id
+            fanAdView = AdView(this, fanId, AdSize.BANNER_HEIGHT_50)
+            binding.fbAddBanner.removeAllViews()
+            binding.fbAddBanner.addView(fanAdView)
+            fanAdView.loadAd()
+
+            binding.fbAddBanner.visibility = View.VISIBLE
+            binding.adMobView.visibility = View.GONE
+        } else if (ad.equals("adMob", true)) {
+            Log.d("MainActivity", "AdMob ads")
+            // AdMob ads
+            // TODO: Need to replace with unit id with original id
+            val adRequest = AdRequest.Builder().build()
+            val adMobView = com.google.android.gms.ads.AdView(this)
+            adMobView.adSize = com.google.android.gms.ads.AdSize.BANNER
+            adMobView.adUnitId = "ca-app-pub-3940256099942544/6300978111"
+            binding.adMobView.removeAllViews()
+            binding.adMobView.addView(adMobView)
+            adMobView.loadAd(adRequest)
+
+            InterstitialAd(this).apply {
+                adUnitId = "ca-app-pub-3940256099942544/1033173712"
+                loadAd(adRequest)
+                adListener = object : AdListener() {
+                    override fun onAdLoaded() {
+                        // Code to be executed when an ad finishes loading.
+                        Log.d("MainActivity", "onAdLoaded")
+                        show()
+                    }
+
+                    override fun onAdFailedToLoad(adError: LoadAdError) {
+                        // Code to be executed when an ad request fails.
+                        Log.d("MainActivity", "onAdFailedToLoad")
+                    }
+
+                    override fun onAdOpened() {
+                        // Code to be executed when the ad is displayed.
+                        Log.d("MainActivity", "onAdOpened")
+                    }
+
+                    override fun onAdClicked() {
+                        // Code to be executed when the user clicks on an ad.
+                        Log.d("MainActivity", "onAdClicked")
+                    }
+
+                    override fun onAdLeftApplication() {
+                        // Code to be executed when the user has left the app.
+                        Log.d("MainActivity", "onAdLeftApplication")
+                    }
+
+                    override fun onAdClosed() {
+                        // Code to be executed when the interstitial ad is closed.
+                        Log.d("MainActivity", "onAdClosed")
+                    }
+                }
+            }
+
+            binding.adMobView.visibility = View.VISIBLE
+            binding.fbAddBanner.visibility = View.GONE
+        }
     }
 
     private fun showAlert() {
@@ -121,7 +177,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        adView.destroy()
+        if (this::fanAdView.isInitialized) {
+            fanAdView.destroy()
+        }
         super.onDestroy()
     }
 }
