@@ -11,6 +11,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.facebook.ads.Ad
+import com.facebook.ads.AdError
 import com.facebook.ads.AdSize
 import com.facebook.ads.AdView
 import com.google.android.gms.ads.AdListener
@@ -40,11 +42,7 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = binding.drawerLayout
         navView = binding.navView
 
-        // Write a message to the database
-        val database = FirebaseDatabase.getInstance()
-        val myRef = database.reference
-
-        myRef.addValueEventListener(object : ValueEventListener {
+        FirebaseDatabase.getInstance().reference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 Log.d("MainActivity", "Firebase database failed ${error.message}")
             }
@@ -56,6 +54,7 @@ class MainActivity : AppCompatActivity() {
                 initAds(
                     firebaseResponse.getString("fan_placement_id"),
                     firebaseResponse.getString("admob_id"),
+                    firebaseResponse.getString("admob_int"),
                     firebaseResponse.getString("ad")
                 )
             }
@@ -74,7 +73,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         navView.menu.findItem(R.id.rateUs).setOnMenuItemClickListener {
-
             showAlert()
             if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                 drawerLayout.closeDrawer(GravityCompat.START)
@@ -83,45 +81,54 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initAds(fanId: String, adMobId: String, ad: String) {
+    private fun initAds(fanId: String, adMobId: String, adMobInt: String, ad: String) {
         Log.d("MainActivity", "Init ads with $ad")
 
         if (ad.equals("fan", true)) {
-            Log.d("MainActivity", "FAN ads")
-            // Fb ads
-            // TODO: Need to replace with placement id with original id
             fanAdView = AdView(this, fanId, AdSize.BANNER_HEIGHT_50)
             binding.fbAddBanner.removeAllViews()
             binding.fbAddBanner.addView(fanAdView)
-            fanAdView.loadAd()
+            fanAdView.loadAd(
+                fanAdView.buildLoadAdConfig().withAdListener(object : com.facebook.ads.AdListener {
+                    override fun onAdClicked(p0: Ad?) {
+                    }
+
+                    override fun onError(p0: Ad?, p1: AdError?) {
+                        Log.d("MainActivity", "onError: ${p1?.errorMessage}")
+                    }
+
+                    override fun onAdLoaded(p0: Ad?) {
+                    }
+
+                    override fun onLoggingImpression(p0: Ad?) {
+                    }
+
+                }).build()
+            );
 
             binding.fbAddBanner.visibility = View.VISIBLE
             binding.adMobView.visibility = View.GONE
         } else if (ad.equals("adMob", true)) {
-            Log.d("MainActivity", "AdMob ads")
-            // AdMob ads
-            // TODO: Need to replace with unit id with original id
             val adRequest = AdRequest.Builder().build()
             val adMobView = com.google.android.gms.ads.AdView(this)
             adMobView.adSize = com.google.android.gms.ads.AdSize.BANNER
-            adMobView.adUnitId = "ca-app-pub-3940256099942544/6300978111"
+            adMobView.adUnitId = adMobId
             binding.adMobView.removeAllViews()
             binding.adMobView.addView(adMobView)
             adMobView.loadAd(adRequest)
 
             InterstitialAd(this).apply {
-                adUnitId = "ca-app-pub-3940256099942544/1033173712"
+                adUnitId = adMobInt
                 loadAd(adRequest)
                 adListener = object : AdListener() {
                     override fun onAdLoaded() {
-                        // Code to be executed when an ad finishes loading.
                         Log.d("MainActivity", "onAdLoaded")
                         show()
                     }
 
                     override fun onAdFailedToLoad(adError: LoadAdError) {
                         // Code to be executed when an ad request fails.
-                        Log.d("MainActivity", "onAdFailedToLoad")
+                        Log.d("MainActivity", "onAdFailedToLoad ${adError.message}")
                     }
 
                     override fun onAdOpened() {
