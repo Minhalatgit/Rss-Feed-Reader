@@ -11,10 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.facebook.ads.Ad
-import com.facebook.ads.AdError
-import com.facebook.ads.AdSize
-import com.facebook.ads.AdView
+import com.facebook.ads.*
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
@@ -35,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navView: NavigationView
 
     private lateinit var fanAdView: AdView
+    private lateinit var fanInterstitial: com.facebook.ads.InterstitialAd
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
                 initAds(
                     firebaseResponse.getString("fan_placement_id"),
+                    firebaseResponse.getString("fan_placement_id_interstitial_android"),
                     firebaseResponse.getString("admob_id"),
                     firebaseResponse.getString("admob_int"),
                     firebaseResponse.getString("ad")
@@ -81,7 +80,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initAds(fanId: String, adMobId: String, adMobInt: String, ad: String) {
+    private fun initAds(
+        fanId: String,
+        fanIntId: String,
+        adMobId: String,
+        adMobInt: String,
+        ad: String
+    ) {
         Log.d("MainActivity", "Init ads with $ad")
 
         if (ad.equals("fan", true)) {
@@ -104,7 +109,41 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 }).build()
-            );
+            )
+
+            fanInterstitial = InterstitialAd(this, fanIntId)
+            val interstitialAdListener = object : InterstitialAdListener {
+                override fun onInterstitialDisplayed(p0: Ad?) {
+
+                }
+
+                override fun onAdClicked(p0: Ad?) {
+                    Log.d("MainActivity", "onAdClicked $p0")
+                }
+
+                override fun onInterstitialDismissed(p0: Ad?) {
+                    Log.d("MainActivity", "onInterstitialDismissed: ")
+                }
+
+                override fun onError(p0: Ad?, p1: AdError?) {
+                    Log.d("MainActivity", "onError: ")
+                }
+
+                override fun onAdLoaded(p0: Ad?) {
+                    Log.d("MainActivity", "onAdLoaded: ")
+                    fanInterstitial.show();
+                }
+
+                override fun onLoggingImpression(p0: Ad?) {
+                    Log.d("MainActivity", "onLoggingImpression: ")
+                }
+            }
+
+            fanInterstitial.loadAd(
+                fanInterstitial.buildLoadAdConfig()
+                    .withAdListener(interstitialAdListener)
+                    .build()
+            )
 
             binding.fbAddBanner.visibility = View.VISIBLE
             binding.adMobView.visibility = View.GONE
@@ -127,27 +166,22 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     override fun onAdFailedToLoad(adError: LoadAdError) {
-                        // Code to be executed when an ad request fails.
                         Log.d("MainActivity", "onAdFailedToLoad ${adError.message}")
                     }
 
                     override fun onAdOpened() {
-                        // Code to be executed when the ad is displayed.
                         Log.d("MainActivity", "onAdOpened")
                     }
 
                     override fun onAdClicked() {
-                        // Code to be executed when the user clicks on an ad.
                         Log.d("MainActivity", "onAdClicked")
                     }
 
                     override fun onAdLeftApplication() {
-                        // Code to be executed when the user has left the app.
                         Log.d("MainActivity", "onAdLeftApplication")
                     }
 
                     override fun onAdClosed() {
-                        // Code to be executed when the interstitial ad is closed.
                         Log.d("MainActivity", "onAdClosed")
                     }
                 }
@@ -186,6 +220,9 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         if (this::fanAdView.isInitialized) {
             fanAdView.destroy()
+        }
+        if (this::fanInterstitial.isInitialized) {
+            fanInterstitial.destroy();
         }
         super.onDestroy()
     }
