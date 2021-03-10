@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
@@ -10,21 +11,20 @@
         android:padding="10dp"
         tools:context=".views.HelpFragment">
 
-        <at.blogc.android.views.ExpandableTextView
-            android:id="@+id/expandableTextView"
-            android:layout_width="wrap_content"
+        <com.ms.square.android.expandabletextview.ExpandableTextView
+            android:id="@+id/expand"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/dummy_text"
-            android:maxLines="3"
-            android:ellipsize="end"
-            app:animation_duration="500"/>
+            expandableTextView:animDuration="200"
+            expandableTextView:maxCollapsedLines="2">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:visibility="gone"
-            android:text="@string/dummy_text"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/expandable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+
+        </com.ms.square.android.expandabletextview.ExpandableTextView>
+
     </LinearLayout>
 </layout>

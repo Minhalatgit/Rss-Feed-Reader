@@ -75,6 +75,7 @@ dependencies {
 
     // Expandable text view
     implementation 'at.blogc:expandabletextview:1.0.5'
+    implementation 'com.ms-square:expandableTextView:0.1.4'
 
     // OneSignal SDK
     implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
