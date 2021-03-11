@@ -2,6 +2,7 @@ package com.koders.rssfeed
 
 import android.app.Application
 import android.util.Log
+import com.facebook.ads.AdSettings
 import com.facebook.ads.AudienceNetworkAds
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
@@ -22,6 +23,7 @@ class RssFeedApplication : Application() {
                 mutableListOf("74B265AA1B8C63133239D7C1844D480A")
             ).build()
         )
+        AdSettings.addTestDevice("ad1dd237-8917-4dd3-91fb-c6e4732b3e19")
 
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
 
