@@ -68,8 +68,6 @@ class HelpFragment : Fragment() {
             }
         })
 
-//        binding.expand.text = requireContext().resources.getString(R.string.dummy_text)
-
         return binding.root
     }
 }

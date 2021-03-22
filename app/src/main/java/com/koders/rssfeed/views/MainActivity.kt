@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -39,6 +40,9 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         drawerLayout = binding.drawerLayout
         navView = binding.navView
+
+//        supportActionBar.displayOptions=ActionBar.DISPLAY_SHOW_CUSTOM
+//        supportActionBar.customView=R.layout.
 
         FirebaseDatabase.getInstance().reference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {

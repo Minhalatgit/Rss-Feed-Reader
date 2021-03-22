@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".views.HelpFragment">
+        tools:context="com.koders.rssfeed.views.HelpFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/faqList"

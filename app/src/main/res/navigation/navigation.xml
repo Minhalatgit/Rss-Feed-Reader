@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/rssFeedFragment"
         android:name="com.koders.rssfeed.views.RssFeedFragment"
-        android:label="Rss Feed"
+        android:label="Printable Coupons"
         tool:layout="@layout/fragment_rss_feed" />
     <fragment
         android:id="@+id/helpFragment"
