@@ -2,11 +2,15 @@ package com.koders.rssfeed.views
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import android.widget.Toolbar
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
@@ -41,8 +45,7 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = binding.drawerLayout
         navView = binding.navView
 
-//        supportActionBar.displayOptions=ActionBar.DISPLAY_SHOW_CUSTOM
-//        supportActionBar.customView=R.layout.
+        centerTitle()
 
         FirebaseDatabase.getInstance().reference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
@@ -229,5 +232,42 @@ class MainActivity : AppCompatActivity() {
             fanInterstitial.destroy();
         }
         super.onDestroy()
+    }
+
+    private fun centerToolbarText() {
+        val mTitleTextView = AppCompatTextView(this)
+        mTitleTextView.text = "Printable Coupons"
+        mTitleTextView.setSingleLine()
+        val layoutParams = ActionBar.LayoutParams(
+            ActionBar.LayoutParams.WRAP_CONTENT,
+            ActionBar.LayoutParams.WRAP_CONTENT
+        )
+        layoutParams.gravity = Gravity.CENTER
+        supportActionBar?.setCustomView(mTitleTextView, layoutParams)
+        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+    }
+    private fun centerTitle() {
+        val textViews: ArrayList<View> = ArrayList()
+        window.decorView
+            .findViewsWithText(textViews, title, View.FIND_VIEWS_WITH_TEXT)
+        if (textViews.size > 0) {
+            var appCompatTextView: AppCompatTextView? = null
+            if (textViews.size == 1) {
+                appCompatTextView = textViews[0] as AppCompatTextView
+            } else {
+                for (v in textViews) {
+                    if (v.parent is Toolbar) {
+                        appCompatTextView = v as AppCompatTextView
+                        break
+                    }
+                }
+            }
+            if (appCompatTextView != null) {
+                val params: ViewGroup.LayoutParams = appCompatTextView.layoutParams
+                params.width = ViewGroup.LayoutParams.MATCH_PARENT
+                appCompatTextView.layoutParams = params
+                appCompatTextView.textAlignment = View.TEXT_ALIGNMENT_CENTER
+            }
+        }
     }
 }

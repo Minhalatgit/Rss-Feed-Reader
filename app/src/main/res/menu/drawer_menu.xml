@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
 
     <item
         android:id="@+id/rssFeedFragment"
+        android:icon="@drawable/menu_icon"
         android:title="Home" />
     <item
         android:id="@+id/helpFragment"
+        android:icon="@drawable/menu_icon"
         android:title="Help" />
     <item
         android:id="@+id/aboutFragment"
+        android:icon="@drawable/menu_icon"
         android:title="About" />
     <item
         android:id="@+id/contact"
+        android:icon="@drawable/menu_icon"
         android:title="Contact" />
     <item
         android:id="@+id/privacyPolicyFragment"
+        android:icon="@drawable/menu_icon"
         android:title="Privacy Policy" />
     <item
         android:id="@+id/rateUs"
+        android:icon="@drawable/menu_icon"
         android:title="Rate us" />
 </menu>
