@@ -8,14 +8,26 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="10dp"
-        tools:context="views.PrivacyPolicyFragment">
+        tools:context=".views.ContactUsFragment">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/dummy_text"
+            android:text="@string/contact_us_dummy"
             android:textColor="@color/black"
             android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:autoLink="email"
+            android:text="minhalnadeem@gmail.com"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
+
     </LinearLayout>
 </layout>

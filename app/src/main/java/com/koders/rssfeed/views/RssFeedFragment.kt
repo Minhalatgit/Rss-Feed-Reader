@@ -12,26 +12,27 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.koders.rssfeed.R
-import com.koders.rssfeed.RssFeedAdapter
-import com.koders.rssfeed.RssFeedViewModel
+import com.koders.rssfeed.*
 import com.koders.rssfeed.databinding.FragmentRssFeedBinding
 import com.prof.rssparser.Article
 
 class RssFeedFragment : Fragment() {
 
+    private lateinit var binding: FragmentRssFeedBinding
     private lateinit var feedRecyclerView: RecyclerView
     private lateinit var rssFeedAdapter: RssFeedAdapter
     private var rssFeedList = ArrayList<Article>()
 
     private lateinit var viewModel: RssFeedViewModel
 
+    var reloadCount: Int = 0
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentRssFeedBinding.inflate(inflater, container, false)
+        binding = FragmentRssFeedBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
 
         feedRecyclerView = binding.feedRecyclerView
@@ -48,9 +49,11 @@ class RssFeedFragment : Fragment() {
         }
 
         viewModel = ViewModelProvider(this).get(RssFeedViewModel::class.java)
-        viewModel.getFeed()
 
+        binding.progress.visibility = View.VISIBLE
+        viewModel.getFeed()
         viewModel.rssFeedList.observe(viewLifecycleOwner, Observer {
+            binding.progress.visibility = View.GONE
             rssFeedAdapter =
                 RssFeedAdapter(requireActivity(), it)
             feedRecyclerView.smoothScrollToPosition(0)
@@ -70,7 +73,15 @@ class RssFeedFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.reload -> viewModel.getFeed()
+            R.id.reload -> {
+                addLimit++
+                if (addLimit > 4) {
+                    addLimit = 0
+                    Log.d("AddCount", "Add limit value set to $addLimit")
+                }
+                binding.progress.visibility = View.VISIBLE
+                viewModel.getFeed()
+            }
             R.id.shareApp -> startActivity(getShareIntent())
             R.id.notification -> Toast.makeText(activity, "Notification", Toast.LENGTH_SHORT).show()
         }

@@ -25,4 +25,9 @@
         android:name="com.koders.rssfeed.views.PrivacyPolicyFragment"
         android:label="Privacy Policy"
         tool:layout="@layout/fragment_privacy_policy" />
+    <fragment
+        android:id="@+id/contactUsFragment"
+        android:name="com.koders.rssfeed.views.ContactUsFragment"
+        android:label="Contact Us"
+        tool:layout="@layout/fragment_contact_us" />
 </navigation>

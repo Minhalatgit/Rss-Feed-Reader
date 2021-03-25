@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.koders.rssfeed.R
+import com.koders.rssfeed.addLimit
 import com.koders.rssfeed.databinding.ActivityMainBinding
 import org.json.JSONObject
 
@@ -70,13 +71,13 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(navView, navController)
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
 
-        navView.menu.findItem(R.id.contact).setOnMenuItemClickListener {
-            Toast.makeText(applicationContext, "Contact", Toast.LENGTH_SHORT).show()
-            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                drawerLayout.closeDrawer(GravityCompat.START)
-            }
-            return@setOnMenuItemClickListener true
-        }
+//        navView.menu.findItem(R.id.contact).setOnMenuItemClickListener {
+//            Toast.makeText(applicationContext, "Contact", Toast.LENGTH_SHORT).show()
+//            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+//                drawerLayout.closeDrawer(GravityCompat.START)
+//            }
+//            return@setOnMenuItemClickListener true
+//        }
 
         navView.menu.findItem(R.id.rateUs).setOnMenuItemClickListener {
             showAlert()
@@ -84,6 +85,14 @@ class MainActivity : AppCompatActivity() {
                 drawerLayout.closeDrawer(GravityCompat.START)
             }
             return@setOnMenuItemClickListener true
+        }
+
+        navController.addOnDestinationChangedListener { _, _, _ ->
+            addLimit++
+            if (addLimit > 4) {
+                addLimit = 0
+                Log.d("AddCount", "Add limit value set to $addLimit")
+            }
         }
     }
 
@@ -246,6 +255,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setCustomView(mTitleTextView, layoutParams)
         supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
     }
+
     private fun centerTitle() {
         val textViews: ArrayList<View> = ArrayList()
         window.decorView
