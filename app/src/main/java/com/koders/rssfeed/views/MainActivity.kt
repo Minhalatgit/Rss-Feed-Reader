@@ -48,6 +48,31 @@ class MainActivity : AppCompatActivity() {
 
         centerTitle()
 
+//        getFirebaseDataForAds()
+
+        val navController = this.findNavController(R.id.navHostFragment)
+        NavigationUI.setupWithNavController(navView, navController)
+        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
+
+        navView.menu.findItem(R.id.rateUs).setOnMenuItemClickListener {
+            showAlert()
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START)
+            }
+            return@setOnMenuItemClickListener true
+        }
+
+        navController.addOnDestinationChangedListener { _, _, _ ->
+            addLimit++
+            if (addLimit > 4) {
+                getFirebaseDataForAds()
+                Log.d("AddCount", "Add limit value set to $addLimit")
+                addLimit = 0
+            }
+        }
+    }
+
+    public fun getFirebaseDataForAds() {
         FirebaseDatabase.getInstance().reference.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 Log.d("MainActivity", "Firebase database failed ${error.message}")
@@ -66,34 +91,6 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         })
-
-        val navController = this.findNavController(R.id.navHostFragment)
-        NavigationUI.setupWithNavController(navView, navController)
-        NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
-
-//        navView.menu.findItem(R.id.contact).setOnMenuItemClickListener {
-//            Toast.makeText(applicationContext, "Contact", Toast.LENGTH_SHORT).show()
-//            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-//                drawerLayout.closeDrawer(GravityCompat.START)
-//            }
-//            return@setOnMenuItemClickListener true
-//        }
-
-        navView.menu.findItem(R.id.rateUs).setOnMenuItemClickListener {
-            showAlert()
-            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                drawerLayout.closeDrawer(GravityCompat.START)
-            }
-            return@setOnMenuItemClickListener true
-        }
-
-        navController.addOnDestinationChangedListener { _, _, _ ->
-            addLimit++
-            if (addLimit > 4) {
-                addLimit = 0
-                Log.d("AddCount", "Add limit value set to $addLimit")
-            }
-        }
     }
 
     private fun initAds(
@@ -115,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     override fun onError(p0: Ad?, p1: AdError?) {
-                        Log.d("MainActivity", "onError: ${p1?.errorMessage}")
+                        Log.d("MainActivity", "onError: FAN banner ${p1?.errorMessage}")
                     }
 
                     override fun onAdLoaded(p0: Ad?) {
@@ -142,7 +139,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onError(p0: Ad?, p1: AdError?) {
-                    Log.d("MainActivity", "onError: ")
+                    Log.d("MainActivity", "onError: FAN Interstitial ")
                 }
 
                 override fun onAdLoaded(p0: Ad?) {

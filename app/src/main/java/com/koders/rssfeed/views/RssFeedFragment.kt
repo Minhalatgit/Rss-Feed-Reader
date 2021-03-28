@@ -76,8 +76,9 @@ class RssFeedFragment : Fragment() {
             R.id.reload -> {
                 addLimit++
                 if (addLimit > 4) {
-                    addLimit = 0
+                    (activity as MainActivity).getFirebaseDataForAds()
                     Log.d("AddCount", "Add limit value set to $addLimit")
+                    addLimit = 0
                 }
                 binding.progress.visibility = View.VISIBLE
                 viewModel.getFeed()

@@ -49,7 +49,10 @@ class RssFeedAdapter(private val context: Context, private val rssFeedList: Muta
 
         val finalDateArr = date.split(" ")
         val finalDateString =
-            finalDateArr[0] + " " + finalDateArr[1] + " " + finalDateArr[2] + " " + finalDateArr[3] + " @ " + finalDateArr[4]
+            finalDateArr[0] + " " + finalDateArr[1] + " " + finalDateArr[2] + " " + finalDateArr[3] + " @ " + finalDateArr[4].substring(
+                0,
+                finalDateArr[4].length - 3
+            )
         Log.d("RssFeedAdapter", "getFormattedDated: $finalDateString")
 
 //        val formatIn = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z")

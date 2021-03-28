@@ -21,7 +21,7 @@
             android:layout_gravity="center_horizontal"
             android:textColor="@color/black"
             android:textSize="12sp"
-            tools:text="Wed, 24 Mar 2021 @ 14:26:00 " />
+            tools:text="Wed, 24 Mar 2021 @ 14:26" />
 
         <ImageView
             android:id="@+id/thumbnail"
