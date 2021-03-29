@@ -9,7 +9,11 @@
         android:id="@+id/rssFeedFragment"
         android:name="com.koders.rssfeed.views.RssFeedFragment"
         android:label="Printable Coupons"
-        tool:layout="@layout/fragment_rss_feed" />
+        tool:layout="@layout/fragment_rss_feed" >
+        <action
+            android:id="@+id/action_rssFeedFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+    </fragment>
     <fragment
         android:id="@+id/helpFragment"
         android:name="com.koders.rssfeed.views.HelpFragment"
@@ -30,4 +34,13 @@
         android:name="com.koders.rssfeed.views.ContactUsFragment"
         android:label="Contact Us"
         tool:layout="@layout/fragment_contact_us" />
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.koders.rssfeed.views.WebViewFragment"
+        android:label=" "
+        tool:layout="@layout/fragment_web_view">
+        <argument
+            android:name="url"
+            app:argType="string" />
+    </fragment>
 </navigation>

@@ -2,6 +2,7 @@ package com.koders.rssfeed.views
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -9,14 +10,21 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.koders.rssfeed.*
 import com.koders.rssfeed.databinding.FragmentRssFeedBinding
 import com.prof.rssparser.Article
+import org.json.JSONObject
 
-class RssFeedFragment : Fragment() {
+class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
 
     private lateinit var binding: FragmentRssFeedBinding
     private lateinit var feedRecyclerView: RecyclerView
@@ -25,7 +33,7 @@ class RssFeedFragment : Fragment() {
 
     private lateinit var viewModel: RssFeedViewModel
 
-    var reloadCount: Int = 0
+    private var isOutside: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,6 +42,19 @@ class RssFeedFragment : Fragment() {
     ): View? {
         binding = FragmentRssFeedBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
+
+        FirebaseDatabase.getInstance().reference.child("outside")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d("RssFeedFragment", "Firebase database failed ${error.message}")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    Log.d("RssFeedFragment", "onDataChange: $snapshot")
+                    isOutside = snapshot.value as Boolean
+                }
+
+            })
 
         feedRecyclerView = binding.feedRecyclerView
 
@@ -53,9 +74,10 @@ class RssFeedFragment : Fragment() {
         binding.progress.visibility = View.VISIBLE
         viewModel.getFeed()
         viewModel.rssFeedList.observe(viewLifecycleOwner, Observer {
+            rssFeedList = it as ArrayList<Article>
             binding.progress.visibility = View.GONE
             rssFeedAdapter =
-                RssFeedAdapter(requireActivity(), it)
+                RssFeedAdapter(requireActivity(), it, this)
             feedRecyclerView.smoothScrollToPosition(0)
             feedRecyclerView.adapter = rssFeedAdapter
         })
@@ -76,10 +98,13 @@ class RssFeedFragment : Fragment() {
             R.id.reload -> {
                 addLimit++
                 if (addLimit > 4) {
-                    (activity as MainActivity).getFirebaseDataForAds()
-                    Log.d("AddCount", "Add limit value set to $addLimit")
-                    addLimit = 0
+                    showAds()
                 }
+
+                binding.feedRecyclerView.adapter =
+                    RssFeedAdapter(
+                        requireActivity(), arrayListOf(Article()), this
+                    )
                 binding.progress.visibility = View.VISIBLE
                 viewModel.getFeed()
             }
@@ -106,5 +131,37 @@ class RssFeedFragment : Fragment() {
             Log.d("ResFeedFragment", "onConfigurationChanged: Landscape")
             feedRecyclerView.layoutManager = GridLayoutManager(activity, 2)
         }
+    }
+
+    override fun onItemClick(position: Int) {
+        // open external browser with item link
+        addLimit++
+        if (addLimit > 4) {
+            showAds()
+        }
+        if (rssFeedList.size != 0) {
+            //check for firebase toggle whether to open inside or outside the app
+            if (isOutside) {
+                //open in web view inside app
+                findNavController().navigate(
+                    RssFeedFragmentDirections.actionRssFeedFragmentToWebViewFragment(
+                        rssFeedList[position].link ?: "www.google.com"
+                    )
+                )
+            } else {
+                requireContext().startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(rssFeedList[position].link)
+                    )
+                )
+            }
+        }
+    }
+
+    private fun showAds() {
+        (activity as MainActivity).getFirebaseDataForAds()
+        Log.d("AddCount", "Add limit value set to $addLimit")
+        addLimit = 0
     }
 }
