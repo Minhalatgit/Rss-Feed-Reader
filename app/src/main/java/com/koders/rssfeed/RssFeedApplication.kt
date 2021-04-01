@@ -1,6 +1,7 @@
 package com.koders.rssfeed
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import com.facebook.ads.AdSettings
 import com.facebook.ads.AudienceNetworkAds
@@ -15,6 +16,9 @@ class RssFeedApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        instance = this
+
         AudienceNetworkAds.initialize(this)
         MobileAds.initialize(this)
         //test ad enable for my device
@@ -36,5 +40,12 @@ class RssFeedApplication : Application() {
         }
 
         FirebaseApp.initializeApp(this)
+    }
+
+    companion object {
+        lateinit var instance: RssFeedApplication
+        fun getCtx(): Context {
+            return instance.applicationContext
+        }
     }
 }

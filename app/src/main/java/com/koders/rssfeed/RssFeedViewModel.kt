@@ -7,12 +7,17 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.koders.rssfeed.network.Channel
+import com.koders.rssfeed.network.RetrofitClient
 import com.prof.rssparser.Article
 import com.prof.rssparser.Parser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.lang.Exception
 
 class RssFeedViewModel(application: Application) : AndroidViewModel(application) {
@@ -33,6 +38,14 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
     fun getFeed() {
         GlobalScope.launch {
             try {
+//                RetrofitClient.apiInterface.login().enqueue(object : Callback<Channel> {
+//                    override fun onFailure(call: Call<Channel>, t: Throwable) {
+//                    }
+//
+//                    override fun onResponse(call: Call<Channel>, response: Response<Channel>) {
+//                        Log.d("RssViewModel", "onResponse: ${response.body()}")
+//                    }
+//                })
                 val channel =
                     parser.getChannel("https://tools.shophermedia.net/gc-rss.asp?cp=2&afid=357373")
                 withContext(Dispatchers.Main) {
@@ -40,8 +53,12 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
                 }
             } catch (e: Exception) {
                 Log.d("RssViewModel", "getFeed failed ${e.message}")
-                withContext(Dispatchers.Main){
-                    Toast.makeText(context, "Something went wrong, reload please", Toast.LENGTH_SHORT).show()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        context,
+                        "Your internet seems slow, reload please",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

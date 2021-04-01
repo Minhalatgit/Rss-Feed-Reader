@@ -8,10 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.prof.rssparser.Article
+import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import java.lang.Exception
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 class RssFeedAdapter(
     private val context: Context,
@@ -24,6 +30,7 @@ class RssFeedAdapter(
         RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val date: TextView = itemView.findViewById(R.id.date)
         val thumbnail: ImageView = itemView.findViewById(R.id.thumbnail)
+        val progress: ProgressBar = itemView.findViewById(R.id.progress)
 
         init {
             itemView.setOnClickListener(this)
@@ -45,7 +52,17 @@ class RssFeedAdapter(
         val rssFeed = rssFeedList[position]
 
         holder.date.text = getFormattedDated(rssFeed.pubDate ?: "")
-        Picasso.get().load(rssFeed.image).into(holder.thumbnail)
+        holder.progress.visibility = View.VISIBLE
+        Picasso.get().load(rssFeed.image).into(holder.thumbnail, object : Callback {
+            override fun onSuccess() {
+                holder.progress.visibility = View.GONE
+            }
+
+            override fun onError(e: Exception?) {
+                holder.progress.visibility = View.GONE
+            }
+
+        })
 
         holder.itemView.setOnClickListener {
             listener.onItemClick(position)
@@ -55,26 +72,27 @@ class RssFeedAdapter(
     private fun getFormattedDated(date: String): String {
 
         if (!date.equals("", true)) {
-            val finalDateArr = date.split(" ")
-            val finalDateString =
-                finalDateArr[0] + " " + finalDateArr[1] + " " + finalDateArr[2] + " " + finalDateArr[3] + " @ " + finalDateArr[4].substring(
-                    0,
-                    finalDateArr[4].length - 3
-                )
+//            val finalDateArr = date.split(" ")
+//            val finalDateString =
+//                finalDateArr[0] + " " + finalDateArr[1] + " " + finalDateArr[2] + " " + finalDateArr[3] + " @ " + finalDateArr[4].substring(
+//                    0,
+//                    finalDateArr[4].length - 3
+//                )
+//            Log.d("RssFeedAdapter", "getFormattedDated: $finalDateString")
+
+            val formatIn = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z")
+            val formatOut = SimpleDateFormat("EEE, dd MMM yyyy @ HH:mm a")
+            val finalDateString: String
+            var formattedDate: Date? = null
+            try {
+                formattedDate = formatIn.parse(date)
+            } catch (e: ParseException) {
+                e.printStackTrace()
+            }
+
+            finalDateString = if (formattedDate != null) formatOut.format(formattedDate) else date
+
             Log.d("RssFeedAdapter", "getFormattedDated: $finalDateString")
-
-//        val formatIn = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z")
-//        val formatOut = SimpleDateFormat("dd-MMM-yyyy")
-//        val finalDateString: String
-//        var formattedDate: Date? = null
-//        try {
-//            formattedDate = formatIn.parse(date)
-//        } catch (e: ParseException) {
-//            e.printStackTrace()
-//        }
-//
-//        finalDateString = if (formattedDate != null) formatOut.format(formattedDate) else date
-
             return finalDateString
         } else {
             return ""

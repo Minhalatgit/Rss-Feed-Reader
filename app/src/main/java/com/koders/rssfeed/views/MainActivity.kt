@@ -208,9 +208,12 @@ class MainActivity : AppCompatActivity() {
     private fun showAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Rate this app")
-        builder.setMessage("Are you enjoying our app? Please give us a review.")
+        builder.setMessage("If you enjoy using the app, would you mind taking a moment to rate it? It won't take more than a minute. Thank you for your support!")
         builder.setIcon(R.drawable.rss)
 
+        builder.setNeutralButton("Later") { dialog, _ ->
+            dialog.cancel()
+        }
         builder.setPositiveButton("Rate now") { _, _ ->
             Toast.makeText(
                 applicationContext,
@@ -218,7 +221,7 @@ class MainActivity : AppCompatActivity() {
                 Toast.LENGTH_LONG
             ).show()
         }
-        builder.setNegativeButton("Cancel") { dialog, _ ->
+        builder.setNegativeButton("No, Thanks") { dialog, _ ->
             dialog.cancel()
         }
         val alertDialog: AlertDialog = builder.create()
