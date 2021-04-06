@@ -1,6 +1,16 @@
 package com.koders.rssfeed.network
 
+import androidx.annotation.NonNull
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "article_table")
 data class Article(
+
+    @PrimaryKey(autoGenerate = true)
+    var id:Int,
+
     var guid: String? = null,
     var title: String? = null,
     var author: String? = null,
@@ -12,6 +22,5 @@ data class Article(
     var audio: String? = null,
     var video: String? = null,
     var sourceName: String? = null,
-    var sourceUrl: String? = null,
-    private var _categories: MutableList<String> = mutableListOf()
+    var sourceUrl: String? = null
 )

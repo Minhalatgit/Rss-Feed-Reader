@@ -1,6 +1,5 @@
 package com.koders.rssfeed.network
 
-
 data class Channel(
     val title: String? = null,
     val link: String? = null,

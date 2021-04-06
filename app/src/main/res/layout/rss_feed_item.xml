@@ -40,12 +40,12 @@
         </LinearLayout>
 
         <ProgressBar
-            android:id="@+id/progress"
+            android:id="@+id/progressBar"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerInParent="true"
             android:indeterminateTint="@color/black"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

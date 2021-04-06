@@ -21,7 +21,7 @@ import java.util.*
 
 class RssFeedAdapter(
     private val context: Context,
-    private val rssFeedList: MutableList<Article>,
+    private val rssFeedList: List<com.koders.rssfeed.network.Article>,
     private val listener: ItemClickListener
 ) :
     RecyclerView.Adapter<RssFeedAdapter.RssFeedHolder>() {
@@ -30,7 +30,7 @@ class RssFeedAdapter(
         RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val date: TextView = itemView.findViewById(R.id.date)
         val thumbnail: ImageView = itemView.findViewById(R.id.thumbnail)
-        val progress: ProgressBar = itemView.findViewById(R.id.progress)
+        val progress: ProgressBar = itemView.findViewById(R.id.progressBar)
 
         init {
             itemView.setOnClickListener(this)
@@ -53,17 +53,18 @@ class RssFeedAdapter(
 
         holder.date.text = getFormattedDated(rssFeed.pubDate ?: "")
         holder.progress.visibility = View.VISIBLE
-        Picasso.get().load(rssFeed.image).into(holder.thumbnail, object : Callback {
-            override fun onSuccess() {
-                holder.progress.visibility = View.GONE
-            }
+        if (rssFeed.image != "") {
+            Picasso.get().load(rssFeed.image).into(holder.thumbnail, object : Callback {
+                override fun onSuccess() {
+                    holder.progress.visibility = View.GONE
+                }
 
-            override fun onError(e: Exception?) {
-                holder.progress.visibility = View.GONE
-            }
+                override fun onError(e: Exception?) {
+                    holder.progress.visibility = View.GONE
+                }
 
-        })
-
+            })
+        }
         holder.itemView.setOnClickListener {
             listener.onItemClick(position)
         }
@@ -72,14 +73,6 @@ class RssFeedAdapter(
     private fun getFormattedDated(date: String): String {
 
         if (!date.equals("", true)) {
-//            val finalDateArr = date.split(" ")
-//            val finalDateString =
-//                finalDateArr[0] + " " + finalDateArr[1] + " " + finalDateArr[2] + " " + finalDateArr[3] + " @ " + finalDateArr[4].substring(
-//                    0,
-//                    finalDateArr[4].length - 3
-//                )
-//            Log.d("RssFeedAdapter", "getFormattedDated: $finalDateString")
-
             val formatIn = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z")
             val formatOut = SimpleDateFormat("EEE, dd MMM yyyy @ HH:mm a")
             val finalDateString: String
@@ -99,7 +92,7 @@ class RssFeedAdapter(
         }
     }
 
-    public interface ItemClickListener {
+    interface ItemClickListener {
         fun onItemClick(position: Int)
     }
 }

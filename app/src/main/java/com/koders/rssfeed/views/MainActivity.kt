@@ -40,6 +40,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fanAdView: AdView
     private lateinit var fanInterstitial: com.facebook.ads.InterstitialAd
 
+    private val TAG = "MainActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -48,7 +50,19 @@ class MainActivity : AppCompatActivity() {
 
         centerTitle()
 
-//        getFirebaseDataForAds()
+        FirebaseDatabase.getInstance().reference.child("ad")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d(TAG, "onCancelled: ${error.message}")
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    Log.d(TAG, "onDataChange AdType for banner: ${snapshot.value}")
+                    // initialize banner ads
+                    initBannerAds(snapshot.value as String)
+                }
+
+            })
 
         val navController = this.findNavController(R.id.navHostFragment)
         NavigationUI.setupWithNavController(navView, navController)
@@ -65,144 +79,175 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, _, _ ->
             addLimit++
             if (addLimit > 4) {
-                getFirebaseDataForAds()
+                initInterstitialAds()
                 Log.d("AddCount", "Add limit value set to $addLimit")
                 addLimit = 0
             }
         }
     }
 
-    public fun getFirebaseDataForAds() {
-        FirebaseDatabase.getInstance().reference.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-                Log.d("MainActivity", "Firebase database failed ${error.message}")
-            }
+    fun initInterstitialAds() {
+        FirebaseDatabase.getInstance().reference.child("ad")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d(TAG, "Firebase database failed ${error.message}")
+                }
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val firebaseResponse = JSONObject(snapshot.value as Map<*, *>)
-                Log.d("MainActivity", firebaseResponse.toString())
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    Log.d(TAG, "onDataChange AdType for interstitial ads: ${snapshot.value}")
+                    val adType = snapshot.value as String;
 
-                initAds(
-                    firebaseResponse.getString("fan_placement_id"),
-                    firebaseResponse.getString("fan_placement_id_interstitial_android"),
-                    firebaseResponse.getString("admob_id"),
-                    firebaseResponse.getString("admob_int"),
-                    firebaseResponse.getString("ad")
-                )
-            }
-        })
+                    // got ad type here
+                    //getting interstitial ad ids
+                    FirebaseDatabase.getInstance().reference.child("interstitial_android")
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onCancelled(error: DatabaseError) {
+                                Log.d(TAG, "onCancelled: ${error.message}")
+                            }
+
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                val interstitialAdId = JSONObject(snapshot.value as Map<*, *>)
+                                Log.d(TAG, "onDataChange Interstitial ad ids: $interstitialAdId")
+
+                                if (adType.equals("fan", true)) {
+                                    fanInterstitial = InterstitialAd(
+                                        this@MainActivity,
+                                        interstitialAdId.getString("fan")
+                                    )
+                                    val interstitialAdListener = object : InterstitialAdListener {
+                                        override fun onInterstitialDisplayed(p0: Ad?) {
+
+                                        }
+
+                                        override fun onAdClicked(p0: Ad?) {
+                                            Log.d(TAG, "onAdClicked $p0")
+                                        }
+
+                                        override fun onInterstitialDismissed(p0: Ad?) {
+                                            Log.d(TAG, "onInterstitialDismissed: ")
+                                        }
+
+                                        override fun onError(p0: Ad?, p1: AdError?) {
+                                            Log.d(TAG, "onError: FAN Interstitial ")
+                                        }
+
+                                        override fun onAdLoaded(p0: Ad?) {
+                                            Log.d(TAG, "onAdLoaded: ")
+                                            fanInterstitial.show();
+                                        }
+
+                                        override fun onLoggingImpression(p0: Ad?) {
+                                            Log.d(TAG, "onLoggingImpression: ")
+                                        }
+                                    }
+
+                                    fanInterstitial.loadAd(
+                                        fanInterstitial.buildLoadAdConfig()
+                                            .withAdListener(interstitialAdListener)
+                                            .build()
+                                    )
+
+                                } else if (adType.equals("adMob", true)) {
+                                    val adRequest = AdRequest.Builder().build()
+                                    InterstitialAd(this@MainActivity).apply {
+                                        adUnitId = interstitialAdId.getString("admob")
+                                        loadAd(adRequest)
+                                        adListener = object : AdListener() {
+                                            override fun onAdLoaded() {
+                                                Log.d(TAG, "onAdLoaded")
+                                                show()
+                                            }
+
+                                            override fun onAdFailedToLoad(adError: LoadAdError) {
+                                                Log.d(
+                                                    TAG, "onAdFailedToLoad ${adError.message}"
+                                                )
+                                            }
+
+                                            override fun onAdOpened() {
+                                                Log.d(TAG, "onAdOpened")
+                                            }
+
+                                            override fun onAdClicked() {
+                                                Log.d(TAG, "onAdClicked")
+                                            }
+
+                                            override fun onAdLeftApplication() {
+                                                Log.d(TAG, "onAdLeftApplication")
+                                            }
+
+                                            override fun onAdClosed() {
+                                                Log.d(TAG, "onAdClosed")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        })
+                }
+            })
     }
 
-    private fun initAds(
-        fanId: String,
-        fanIntId: String,
-        adMobId: String,
-        adMobInt: String,
-        ad: String
-    ) {
-        Log.d("MainActivity", "Init ads with $ad")
-
-        if (ad.equals("fan", true)) {
-            fanAdView = AdView(this, fanId, AdSize.BANNER_HEIGHT_50)
-            binding.fbAddBanner.removeAllViews()
-            binding.fbAddBanner.addView(fanAdView)
-            fanAdView.loadAd(
-                fanAdView.buildLoadAdConfig().withAdListener(object : com.facebook.ads.AdListener {
-                    override fun onAdClicked(p0: Ad?) {
-                    }
-
-                    override fun onError(p0: Ad?, p1: AdError?) {
-                        Log.d("MainActivity", "onError: FAN banner ${p1?.errorMessage}")
-                    }
-
-                    override fun onAdLoaded(p0: Ad?) {
-                    }
-
-                    override fun onLoggingImpression(p0: Ad?) {
-                    }
-
-                }).build()
-            )
-
-            fanInterstitial = InterstitialAd(this, fanIntId)
-            val interstitialAdListener = object : InterstitialAdListener {
-                override fun onInterstitialDisplayed(p0: Ad?) {
-
+    private fun initBannerAds(adType: String) {
+        //getting banner ad ids
+        FirebaseDatabase.getInstance().reference.child("banner_android")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d(TAG, "onCancelled: ${error.message}")
                 }
 
-                override fun onAdClicked(p0: Ad?) {
-                    Log.d("MainActivity", "onAdClicked $p0")
-                }
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val bannerIds = JSONObject(snapshot.value as Map<*, *>)
+                    Log.d(TAG, "onDataChange Banner ad ids: $bannerIds")
+                    //check for ad type and show accordingly
 
-                override fun onInterstitialDismissed(p0: Ad?) {
-                    Log.d("MainActivity", "onInterstitialDismissed: ")
-                }
+                    if (adType.equals("fan", true)) {
+                        fanAdView =
+                            AdView(
+                                this@MainActivity,
+                                bannerIds.getString("fan"),
+                                AdSize.BANNER_HEIGHT_50
+                            )
+                        binding.fbAddBanner.removeAllViews()
+                        binding.fbAddBanner.addView(fanAdView)
+                        fanAdView.loadAd(
+                            fanAdView.buildLoadAdConfig()
+                                .withAdListener(object : com.facebook.ads.AdListener {
+                                    override fun onAdClicked(p0: Ad?) {
+                                    }
 
-                override fun onError(p0: Ad?, p1: AdError?) {
-                    Log.d("MainActivity", "onError: FAN Interstitial ")
-                }
+                                    override fun onError(p0: Ad?, p1: AdError?) {
+                                        Log.d(
+                                            "MainActivity",
+                                            "onError: FAN banner ${p1?.errorMessage}"
+                                        )
+                                    }
 
-                override fun onAdLoaded(p0: Ad?) {
-                    Log.d("MainActivity", "onAdLoaded: ")
-                    fanInterstitial.show();
-                }
+                                    override fun onAdLoaded(p0: Ad?) {
+                                    }
 
-                override fun onLoggingImpression(p0: Ad?) {
-                    Log.d("MainActivity", "onLoggingImpression: ")
-                }
-            }
+                                    override fun onLoggingImpression(p0: Ad?) {
+                                    }
 
-            fanInterstitial.loadAd(
-                fanInterstitial.buildLoadAdConfig()
-                    .withAdListener(interstitialAdListener)
-                    .build()
-            )
+                                }).build()
+                        )
+                        binding.fbAddBanner.visibility = View.VISIBLE
+                        binding.adMobView.visibility = View.GONE
+                    } else if (adType.equals("adMob", true)) {
+                        val adRequest = AdRequest.Builder().build()
+                        val adMobView = com.google.android.gms.ads.AdView(this@MainActivity)
+                        adMobView.adSize = com.google.android.gms.ads.AdSize.BANNER
+                        adMobView.adUnitId = bannerIds.getString("admob")
+                        binding.adMobView.removeAllViews()
+                        binding.adMobView.addView(adMobView)
+                        adMobView.loadAd(adRequest)
 
-            binding.fbAddBanner.visibility = View.VISIBLE
-            binding.adMobView.visibility = View.GONE
-        } else if (ad.equals("adMob", true)) {
-            val adRequest = AdRequest.Builder().build()
-            val adMobView = com.google.android.gms.ads.AdView(this)
-            adMobView.adSize = com.google.android.gms.ads.AdSize.BANNER
-            adMobView.adUnitId = adMobId
-            binding.adMobView.removeAllViews()
-            binding.adMobView.addView(adMobView)
-            adMobView.loadAd(adRequest)
-
-            InterstitialAd(this).apply {
-                adUnitId = adMobInt
-                loadAd(adRequest)
-                adListener = object : AdListener() {
-                    override fun onAdLoaded() {
-                        Log.d("MainActivity", "onAdLoaded")
-                        show()
-                    }
-
-                    override fun onAdFailedToLoad(adError: LoadAdError) {
-                        Log.d("MainActivity", "onAdFailedToLoad ${adError.message}")
-                    }
-
-                    override fun onAdOpened() {
-                        Log.d("MainActivity", "onAdOpened")
-                    }
-
-                    override fun onAdClicked() {
-                        Log.d("MainActivity", "onAdClicked")
-                    }
-
-                    override fun onAdLeftApplication() {
-                        Log.d("MainActivity", "onAdLeftApplication")
-                    }
-
-                    override fun onAdClosed() {
-                        Log.d("MainActivity", "onAdClosed")
+                        binding.adMobView.visibility = View.VISIBLE
+                        binding.fbAddBanner.visibility = View.GONE
                     }
                 }
-            }
 
-            binding.adMobView.visibility = View.VISIBLE
-            binding.fbAddBanner.visibility = View.GONE
-        }
+            })
     }
 
     private fun showAlert() {

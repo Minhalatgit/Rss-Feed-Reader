@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,15 +20,14 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.koders.rssfeed.*
 import com.koders.rssfeed.databinding.FragmentRssFeedBinding
-import com.prof.rssparser.Article
-import org.json.JSONObject
 
 class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
 
     private lateinit var binding: FragmentRssFeedBinding
     private lateinit var feedRecyclerView: RecyclerView
     private lateinit var rssFeedAdapter: RssFeedAdapter
-    private var rssFeedList = ArrayList<Article>()
+
+    private lateinit var rssFeedList: List<com.koders.rssfeed.network.Article>
 
     private lateinit var viewModel: RssFeedViewModel
 
@@ -42,6 +40,9 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
     ): View? {
         binding = FragmentRssFeedBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
+        feedRecyclerView = binding.feedRecyclerView
+
+        rssFeedList = ArrayList()
 
         FirebaseDatabase.getInstance().reference.child("outside")
             .addValueEventListener(object : ValueEventListener {
@@ -55,8 +56,6 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
                 }
 
             })
-
-        feedRecyclerView = binding.feedRecyclerView
 
         val orientation = activity?.resources?.configuration?.orientation
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -74,11 +73,11 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
         binding.progress.visibility = View.VISIBLE
         viewModel.getFeed()
         viewModel.rssFeedList.observe(viewLifecycleOwner, Observer {
-            rssFeedList = it as ArrayList<Article>
+            (rssFeedList as ArrayList<com.koders.rssfeed.network.Article>).clear()
+            rssFeedList = it
             binding.progress.visibility = View.GONE
-            rssFeedAdapter =
-                RssFeedAdapter(requireActivity(), it, this)
             feedRecyclerView.smoothScrollToPosition(0)
+            rssFeedAdapter = RssFeedAdapter(requireActivity(), rssFeedList, this)
             feedRecyclerView.adapter = rssFeedAdapter
         })
 
@@ -101,10 +100,8 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
                     showAds()
                 }
 
-                binding.feedRecyclerView.adapter =
-                    RssFeedAdapter(
-                        requireActivity(), arrayListOf(Article()), this
-                    )
+                (rssFeedList as ArrayList<com.koders.rssfeed.network.Article>).clear()
+                rssFeedAdapter.notifyDataSetChanged()
                 binding.progress.visibility = View.VISIBLE
                 viewModel.getFeed()
             }
@@ -139,7 +136,7 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
         if (addLimit > 4) {
             showAds()
         }
-        if (rssFeedList.size != 0) {
+        if (rssFeedList.isNotEmpty()) {
             //check for firebase toggle whether to open inside or outside the app
             if (isOutside) {
                 //open in web view inside app
@@ -160,7 +157,7 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
     }
 
     private fun showAds() {
-        (activity as MainActivity).getFirebaseDataForAds()
+        (activity as MainActivity).initInterstitialAds()
         Log.d("AddCount", "Add limit value set to $addLimit")
         addLimit = 0
     }
