@@ -13,6 +13,22 @@
             android:layout_height="match_parent"
             tools:context="com.koders.rssfeed.views.MainActivity">
 
+<!--            <androidx.appcompat.widget.Toolbar-->
+<!--                android:id="@+id/toolbar"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:background="@color/app_color">-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:textSize="17sp"-->
+<!--                    android:text="Printing Coupons"-->
+<!--                    android:textColor="@color/white" />-->
+
+<!--            </androidx.appcompat.widget.Toolbar>-->
+
             <fragment
                 android:id="@+id/navHostFragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"
@@ -50,9 +66,8 @@
             android:id="@+id/navView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="start"
+            android:layout_gravity='start'
             app:headerLayout="@layout/navigation_header"
-            app:itemIconPadding="7dp"
             app:menu="@menu/drawer_menu" />
 
     </androidx.drawerlayout.widget.DrawerLayout>

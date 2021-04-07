@@ -50,6 +50,8 @@ class MainActivity : AppCompatActivity() {
 
         centerTitle()
 
+//        setSupportActionBar(binding.toolbar)
+
         FirebaseDatabase.getInstance().reference.child("ad")
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -147,7 +149,10 @@ class MainActivity : AppCompatActivity() {
                                             .build()
                                     )
 
-                                } else if (adType.equals("adMob", true)) {
+                                } else if (adType.equals("amazon", true)) {
+                                    // amazon interstitial ads will setup here
+                                } else {
+                                    // else admob will show
                                     val adRequest = AdRequest.Builder().build()
                                     InterstitialAd(this@MainActivity).apply {
                                         adUnitId = interstitialAdId.getString("admob")
@@ -233,7 +238,11 @@ class MainActivity : AppCompatActivity() {
                         )
                         binding.fbAddBanner.visibility = View.VISIBLE
                         binding.adMobView.visibility = View.GONE
-                    } else if (adType.equals("adMob", true)) {
+                    } else if (adType.equals("amazon", true)) {
+                        // amazon banner ad work will go here
+
+                    } else {
+                        //else admob will show
                         val adRequest = AdRequest.Builder().build()
                         val adMobView = com.google.android.gms.ads.AdView(this@MainActivity)
                         adMobView.adSize = com.google.android.gms.ads.AdSize.BANNER
@@ -253,12 +262,13 @@ class MainActivity : AppCompatActivity() {
     private fun showAlert() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Rate this app")
-        builder.setMessage("If you enjoy using the app, would you mind taking a moment to rate it? It won't take more than a minute. Thank you for your support!")
+//        builder.setMessage("If you enjoy using the app, would you mind taking a moment to rate it? It won't take more than a minute. Thank you for your support!")
+        builder.setMessage("Are you enjoying our app? Please give us a review.")
         builder.setIcon(R.drawable.rss)
 
-        builder.setNeutralButton("Later") { dialog, _ ->
-            dialog.cancel()
-        }
+//        builder.setNeutralButton("Later") { dialog, _ ->
+//            dialog.cancel()
+//        }
         builder.setPositiveButton("Rate now") { _, _ ->
             Toast.makeText(
                 applicationContext,
@@ -266,9 +276,12 @@ class MainActivity : AppCompatActivity() {
                 Toast.LENGTH_LONG
             ).show()
         }
-        builder.setNegativeButton("No, Thanks") { dialog, _ ->
+        builder.setNegativeButton("Cancel") { dialog, _ ->
             dialog.cancel()
         }
+//        builder.setNegativeButton("No, Thanks") { dialog, _ ->
+//            dialog.cancel()
+//        }
         val alertDialog: AlertDialog = builder.create()
         alertDialog.show()
     }
@@ -286,19 +299,6 @@ class MainActivity : AppCompatActivity() {
             fanInterstitial.destroy();
         }
         super.onDestroy()
-    }
-
-    private fun centerToolbarText() {
-        val mTitleTextView = AppCompatTextView(this)
-        mTitleTextView.text = "Printable Coupons"
-        mTitleTextView.setSingleLine()
-        val layoutParams = ActionBar.LayoutParams(
-            ActionBar.LayoutParams.WRAP_CONTENT,
-            ActionBar.LayoutParams.WRAP_CONTENT
-        )
-        layoutParams.gravity = Gravity.CENTER
-        supportActionBar?.setCustomView(mTitleTextView, layoutParams)
-        supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
     }
 
     private fun centerTitle() {

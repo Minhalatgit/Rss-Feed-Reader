@@ -33,6 +33,12 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
 
     private var isOutside: Boolean = false
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(RssFeedViewModel::class.java)
+        viewModel.getFeed()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -68,15 +74,11 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
             feedRecyclerView.layoutManager = GridLayoutManager(activity, 2)
         }
 
-        viewModel = ViewModelProvider(this).get(RssFeedViewModel::class.java)
-
         binding.progress.visibility = View.VISIBLE
-        viewModel.getFeed()
         viewModel.rssFeedList.observe(viewLifecycleOwner, Observer {
             (rssFeedList as ArrayList<com.koders.rssfeed.network.Article>).clear()
             rssFeedList = it
             binding.progress.visibility = View.GONE
-            feedRecyclerView.smoothScrollToPosition(0)
             rssFeedAdapter = RssFeedAdapter(requireActivity(), rssFeedList, this)
             feedRecyclerView.adapter = rssFeedAdapter
         })

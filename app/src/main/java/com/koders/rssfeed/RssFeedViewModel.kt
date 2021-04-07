@@ -3,6 +3,7 @@ package com.koders.rssfeed
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import android.view.Gravity
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -113,11 +114,14 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
                 }
                 Log.d("RssViewModel", "getFeed failed ${e.message}")
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
+                    val toast = Toast.makeText(
                         context,
-                        "Your internet seems slow, reload please",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                        "Couldn't refresh feed, check your internet",
+                        Toast.LENGTH_LONG
+                    )
+                    toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
+//                    toast.view.background=
+                    toast.show()
                 }
             }
         }
