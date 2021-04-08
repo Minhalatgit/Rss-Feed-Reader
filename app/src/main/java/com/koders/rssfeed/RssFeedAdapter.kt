@@ -74,7 +74,7 @@ class RssFeedAdapter(
 
         if (!date.equals("", true)) {
             val formatIn = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z")
-            val formatOut = SimpleDateFormat("EEE, dd MMM yyyy @ HH:mm a")
+            val formatOut = SimpleDateFormat("EEE, dd MMM yyyy @ HH:mm")
             val finalDateString: String
             var formattedDate: Date? = null
             try {

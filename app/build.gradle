@@ -107,4 +107,6 @@ dependencies {
 
     // Amazon ads
 //    implementation 'com.amazon.android:mobile-ads:5.0.0'
+
+    implementation 'com.github.hotchemi:android-rate:1.0.1'
 }

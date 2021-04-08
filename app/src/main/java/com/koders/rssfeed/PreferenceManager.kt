@@ -14,4 +14,12 @@ object PreferenceManager {
     }
 
     fun getIsFirstLaunch() = preferences.getBoolean("is_first_launch", true)
+
+    fun setLaunchCount(count: Int) {
+        editor.putInt("launch_count", count)
+        editor.apply()
+    }
+
+    fun getLaunchCount() = preferences.getInt("launch_count", 0)
+
 }

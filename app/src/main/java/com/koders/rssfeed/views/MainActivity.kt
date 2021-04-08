@@ -29,6 +29,7 @@ import com.google.firebase.database.ValueEventListener
 import com.koders.rssfeed.R
 import com.koders.rssfeed.addLimit
 import com.koders.rssfeed.databinding.ActivityMainBinding
+import hotchemi.android.rate.AppRate
 import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
@@ -49,6 +50,14 @@ class MainActivity : AppCompatActivity() {
         navView = binding.navView
 
         centerTitle()
+
+        AppRate.with(this)
+            .setInstallDays(1)
+            .setLaunchTimes(3)
+            .setRemindInterval(2)
+            .monitor()
+
+        AppRate.showRateDialogIfMeetsConditions(this)
 
 //        setSupportActionBar(binding.toolbar)
 
