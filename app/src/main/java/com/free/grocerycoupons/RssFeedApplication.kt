@@ -21,7 +21,9 @@ class RssFeedApplication : Application() {
         instance = this
 
         //Amazon ads
-        AdRegistration.setAppKey("0123456789ABCDEF0123456789ABCDEF");
+        AdRegistration.setAppKey("0123456789ABCDEF0123456789ABCDEF")
+        AdRegistration.enableTesting(true)
+        AdRegistration.enableLogging(true)
 
         //fan ads
         AudienceNetworkAds.initialize(this)

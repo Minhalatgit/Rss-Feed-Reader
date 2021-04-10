@@ -16,6 +16,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.amazon.device.ads.AdLayout
 import com.amazon.device.ads.AdProperties
+import com.amazon.device.ads.AdRegistration
 import com.facebook.ads.*
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -283,12 +284,10 @@ class MainActivity : AppCompatActivity() {
                         binding.amazonAddBanner.visibility = View.GONE
                     } else if (adType.equals("amazon", true)) {
                         // amazon banner ad work will go here
-                        amazonAdView = AdLayout(this@MainActivity)
-//                        amazonAdView.disableAutoShow()
-                        binding.amazonAddBanner.addView(amazonAdView)
-//                        amazonAdView. = bannerIds.getString("admob")
+                        amazonAdView = AdLayout(this@MainActivity,com.amazon.device.ads.AdSize.SIZE_AUTO_NO_SCALE)
                         binding.amazonAddBanner.removeAllViews()
 
+                        binding.amazonAddBanner.addView(amazonAdView)
                         val amazonLoadAdSuccess = amazonAdView.loadAd()
 
                         Log.d(TAG, "Amazon load ad $amazonLoadAdSuccess")
