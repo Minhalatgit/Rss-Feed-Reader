@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/gradient_bg"
-        tools:context="com.koders.rssfeed.views.RssFeedFragment">
+        tools:context="com.free.grocerycoupons.views.RssFeedFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/feedRecyclerView"

@@ -11,23 +11,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="com.koders.rssfeed.views.MainActivity">
-
-<!--            <androidx.appcompat.widget.Toolbar-->
-<!--                android:id="@+id/toolbar"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@color/app_color">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:textSize="17sp"-->
-<!--                    android:text="Printing Coupons"-->
-<!--                    android:textColor="@color/white" />-->
-
-<!--            </androidx.appcompat.widget.Toolbar>-->
+            tools:context="com.free.grocerycoupons.views.MainActivity">
 
             <fragment
                 android:id="@+id/navHostFragment"
@@ -57,6 +41,12 @@
                     android:id="@+id/fbAddBanner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <LinearLayout
+                    android:id="@+id/amazonAddBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:orientation="vertical" />
             </LinearLayout>
 

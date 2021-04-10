@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/rssFeedFragment"
-        android:name="com.koders.rssfeed.views.RssFeedFragment"
+        android:name="com.free.grocerycoupons.views.RssFeedFragment"
         android:label="Printable Coupons"
         tool:layout="@layout/fragment_rss_feed" >
         <action
@@ -16,27 +16,27 @@
     </fragment>
     <fragment
         android:id="@+id/helpFragment"
-        android:name="com.koders.rssfeed.views.HelpFragment"
+        android:name="com.free.grocerycoupons.views.HelpFragment"
         android:label="Help"
         tool:layout="@layout/fragment_help" />
     <fragment
         android:id="@+id/aboutFragment"
-        android:name="com.koders.rssfeed.views.AboutFragment"
+        android:name="com.free.grocerycoupons.views.AboutFragment"
         android:label="About"
         tool:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/privacyPolicyFragment"
-        android:name="com.koders.rssfeed.views.PrivacyPolicyFragment"
+        android:name="com.free.grocerycoupons.views.PrivacyPolicyFragment"
         android:label="Privacy Policy"
         tool:layout="@layout/fragment_privacy_policy" />
     <fragment
         android:id="@+id/contactUsFragment"
-        android:name="com.koders.rssfeed.views.ContactUsFragment"
+        android:name="com.free.grocerycoupons.views.ContactUsFragment"
         android:label="Contact Us"
         tool:layout="@layout/fragment_contact_us" />
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="com.koders.rssfeed.views.WebViewFragment"
+        android:name="com.free.grocerycoupons.views.WebViewFragment"
         android:label=" "
         tool:layout="@layout/fragment_web_view">
         <argument

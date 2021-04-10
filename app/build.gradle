@@ -12,7 +12,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.koders.rssfeed"
+        applicationId "com.free.grocerycoupons"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -106,7 +106,7 @@ dependencies {
     androidTestImplementation "androidx.room:room-testing:$room_version"
 
     // Amazon ads
-//    implementation 'com.amazon.android:mobile-ads:5.0.0'
+    implementation 'com.amazon.android:mobile-ads:5.+'
 
     implementation 'com.github.hotchemi:android-rate:1.0.1'
 }
