@@ -284,7 +284,10 @@ class MainActivity : AppCompatActivity() {
                         binding.amazonAddBanner.visibility = View.GONE
                     } else if (adType.equals("amazon", true)) {
                         // amazon banner ad work will go here
-                        amazonAdView = AdLayout(this@MainActivity,com.amazon.device.ads.AdSize.SIZE_AUTO_NO_SCALE)
+                        amazonAdView = AdLayout(
+                            this@MainActivity
+                        )
+                        amazonAdView.timeout = 20000
                         binding.amazonAddBanner.removeAllViews()
 
                         binding.amazonAddBanner.addView(amazonAdView)

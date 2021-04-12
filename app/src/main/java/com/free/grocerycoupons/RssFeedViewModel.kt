@@ -38,27 +38,28 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
                 val channel =
                     parser.getChannel("https://tools.shophermedia.net/gc-rss.asp?cp=2&afid=357373")
                 withContext(Dispatchers.Main) {
-                    val articleListDb = dao.getArticles()
+                    val articleListDb = dao.getArticles() //getting all from local db
                     val articleList = ArrayList<com.free.grocerycoupons.network.Article>()
-                    for (article in channel.articles) {
+                    for (article in channel.articles) { //loop for all articles from API
 
-                        val currentDate = Date()
+                        val currentDate = Date() //current date
                         val c = Calendar.getInstance()
                         c.time = currentDate
                         c.add(Calendar.DATE, -30)
-                        val thirtyDaysBackDate = c.time
+                        val thirtyDaysBackDate = c.time //date to 30 days back
 
                         var isExists = false
 
-                        if (articleListDb.isNotEmpty()) {
-                            for (articleDb in articleListDb) {
-                                if (article.guid == articleDb.guid) {
-                                    Log.d("RssViewModel", "Item already exists in local db")
+                        if (articleListDb.isNotEmpty()) { //if local database is empty
+                            for (articleDb in articleListDb) { //loop on local database list
+                                if (article.guid == articleDb.guid) { //remote data already exists in local db
                                     isExists = true
                                     break
+                                } else {
+                                    isExists = false
                                 }
                             }
-                            if (!isExists) {
+                            if (!isExists) { // if api item not exist in local db
                                 if (getDate(article.pubDate!!).after(thirtyDaysBackDate)) {
 
                                     articleList.add(
