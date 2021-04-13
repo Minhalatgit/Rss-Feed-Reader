@@ -1,4 +1,4 @@
-package com.free.grocerycoupons
+package com.free.printable.coupons
 
 data class QuestionAnswer(
     val question: String,

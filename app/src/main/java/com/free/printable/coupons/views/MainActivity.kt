@@ -1,4 +1,4 @@
-package com.free.grocerycoupons.views
+package com.free.printable.coupons.views
 
 import android.os.Bundle
 import android.util.Log
@@ -16,7 +16,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.amazon.device.ads.AdLayout
 import com.amazon.device.ads.AdProperties
-import com.amazon.device.ads.AdRegistration
 import com.facebook.ads.*
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -27,9 +26,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.free.grocerycoupons.R
-import com.free.grocerycoupons.addLimit
-import com.free.grocerycoupons.databinding.ActivityMainBinding
+import com.free.printable.R
+import com.free.printable.coupons.addLimit
+import com.free.printable.databinding.ActivityMainBinding
 import hotchemi.android.rate.AppRate
 import org.json.JSONObject
 

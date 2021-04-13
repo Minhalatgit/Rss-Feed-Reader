@@ -1,10 +1,10 @@
-package com.free.grocerycoupons.room
+package com.free.printable.coupons.room
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.free.grocerycoupons.network.Article
+import com.free.printable.coupons.network.Article
 
 @Database(entities = [Article::class], version = 1, exportSchema = false)
 abstract class RoomDb : RoomDatabase() {

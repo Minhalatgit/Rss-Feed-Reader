@@ -1,4 +1,4 @@
-package com.free.grocerycoupons.views
+package com.free.printable.coupons.views
 
 import android.os.Bundle
 import android.util.Log
@@ -12,9 +12,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.free.grocerycoupons.FaqAdapter
-import com.free.grocerycoupons.QuestionAnswer
-import com.free.grocerycoupons.databinding.FragmentHelpBinding
+import com.free.printable.coupons.FaqAdapter
+import com.free.printable.coupons.QuestionAnswer
+import com.free.printable.databinding.FragmentHelpBinding
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -63,7 +63,8 @@ class HelpFragment : Fragment() {
                 }
                 faqList.reverse()
 
-                faqListRv.adapter = FaqAdapter(faqList)
+                faqListRv.adapter =
+                    FaqAdapter(faqList)
                 Log.d("HelpFragment", faqList.toString())
             }
         })

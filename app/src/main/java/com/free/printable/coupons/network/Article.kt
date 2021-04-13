@@ -1,4 +1,4 @@
-package com.free.grocerycoupons.network
+package com.free.printable.coupons.network
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

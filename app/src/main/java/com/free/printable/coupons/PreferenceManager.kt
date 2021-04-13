@@ -1,11 +1,12 @@
-package com.free.grocerycoupons
+package com.free.printable.coupons
 
 import android.content.Context
 
 object PreferenceManager {
 
     private val preferences =
-        RssFeedApplication.getCtx().getSharedPreferences("my_pref", Context.MODE_PRIVATE)
+        RssFeedApplication.getCtx()
+            .getSharedPreferences("my_pref", Context.MODE_PRIVATE)
     private val editor = preferences.edit()
 
     fun setIsFirstLaunch(isLogin: Boolean) {

@@ -1,4 +1,4 @@
-package com.free.grocerycoupons
+package com.free.printable
 
 import org.junit.Test
 

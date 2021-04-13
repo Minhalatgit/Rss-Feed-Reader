@@ -1,6 +1,6 @@
-package com.free.grocerycoupons.network
+package com.free.printable.coupons.network
 
-import com.free.grocerycoupons.BuildConfig
+import com.free.printable.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

@@ -1,10 +1,10 @@
-package com.free.grocerycoupons.views
+package com.free.printable.coupons.views
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
-import com.free.grocerycoupons.R
+import com.free.printable.R
 
 class TutorialActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

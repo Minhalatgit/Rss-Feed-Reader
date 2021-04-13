@@ -1,4 +1,4 @@
-package com.free.grocerycoupons.network
+package com.free.printable.coupons.network
 
 import retrofit2.Call
 import retrofit2.http.GET

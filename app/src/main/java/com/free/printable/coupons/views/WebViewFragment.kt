@@ -1,4 +1,4 @@
-package com.free.grocerycoupons.views
+package com.free.printable.coupons.views
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import com.free.grocerycoupons.databinding.FragmentWebViewBinding
+import com.free.printable.databinding.FragmentWebViewBinding
 
 
 class WebViewFragment : Fragment() {

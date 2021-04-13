@@ -1,4 +1,4 @@
-package com.free.grocerycoupons
+package com.free.printable.coupons
 
 import java.text.ParseException
 import java.text.SimpleDateFormat

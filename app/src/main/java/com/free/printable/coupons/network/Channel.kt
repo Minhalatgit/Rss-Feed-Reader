@@ -1,4 +1,4 @@
-package com.free.grocerycoupons.network
+package com.free.printable.coupons.network
 
 data class Channel(
     val title: String? = null,

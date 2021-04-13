@@ -8,45 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:45950249139:android:3aad935c13acaa15eb68c6",
+        "mobilesdk_app_id": "1:45950249139:android:c745eaaa982729a8eb68c6",
         "android_client_info": {
-          "package_name": "com.free.grocerycoupons"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "45950249139-ed8sg6csa7c8l3kcc4n6gsdfo90ki5jl.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCOUQPfhSxRG_npFecyOY9lQoLNJwlDxYA"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "45950249139-ed8sg6csa7c8l3kcc4n6gsdfo90ki5jl.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "45950249139-aqk3nga3m47933gaplon7hgcc0cv07sv.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.yass.RSSReaderApp"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:45950249139:android:efc0c342cf5513fbeb68c6",
-        "android_client_info": {
-          "package_name": "com.koders.rssfeed"
+          "package_name": "com.free.printable.coupons"
         }
       },
       "oauth_client": [

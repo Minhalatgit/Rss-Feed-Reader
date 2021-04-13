@@ -1,4 +1,4 @@
-package com.free.grocerycoupons
+package com.free.printable.coupons
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-
+import com.free.printable.R
 
 class FaqAdapter(
     private val list: ArrayList<QuestionAnswer>

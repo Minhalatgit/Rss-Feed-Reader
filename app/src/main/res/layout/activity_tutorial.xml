@@ -7,7 +7,7 @@
     android:background="@drawable/gradient_bg"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".views.TutorialActivity">
+    tools:context=".coupons.views.TutorialActivity">
 
     <TextView
         android:layout_width="wrap_content"

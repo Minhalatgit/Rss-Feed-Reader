@@ -1,4 +1,4 @@
-package com.free.grocerycoupons
+package com.free.printable.coupons
 
 import android.content.Context
 import android.util.Log
@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.free.printable.R
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import java.lang.Exception
@@ -18,7 +19,7 @@ import java.util.*
 
 class RssFeedAdapter(
     private val context: Context,
-    private val rssFeedList: List<com.free.grocerycoupons.network.Article>,
+    private val rssFeedList: List<com.free.printable.coupons.network.Article>,
     private val listener: ItemClickListener
 ) :
     RecyclerView.Adapter<RssFeedAdapter.RssFeedHolder>() {

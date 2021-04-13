@@ -1,7 +1,7 @@
-package com.free.grocerycoupons.room
+package com.free.printable.coupons.room
 
 import androidx.room.*
-import com.free.grocerycoupons.network.Article
+import com.free.printable.coupons.network.Article
 
 @Dao
 interface ArticleDao {

@@ -1,9 +1,8 @@
-package com.free.grocerycoupons
+package com.free.printable.coupons
 
 import android.app.Application
 import android.content.Context
 import android.util.Log
-import com.amazon.device.ads.AdRegistration
 import com.facebook.ads.AdSettings
 import com.facebook.ads.AudienceNetworkAds
 import com.google.android.gms.ads.MobileAds

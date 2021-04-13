@@ -1,4 +1,4 @@
-package com.free.grocerycoupons
+package com.free.printable.coupons
 
 import android.app.Application
 import android.content.Context
@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.free.grocerycoupons.room.RoomDb
+import com.free.printable.coupons.room.RoomDb
 import com.prof.rssparser.Parser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -25,8 +25,8 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
         .context(application)
         .build()
 
-    private var _rssFeedList = MutableLiveData<List<com.free.grocerycoupons.network.Article>>()
-    val rssFeedList: LiveData<List<com.free.grocerycoupons.network.Article>>
+    private var _rssFeedList = MutableLiveData<List<com.free.printable.coupons.network.Article>>()
+    val rssFeedList: LiveData<List<com.free.printable.coupons.network.Article>>
         get() = _rssFeedList
 
     fun getFeed() {
@@ -39,7 +39,7 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
                     parser.getChannel("https://tools.shophermedia.net/gc-rss.asp?cp=2&afid=357373")
                 withContext(Dispatchers.Main) {
                     val articleListDb = dao.getArticles() //getting all from local db
-                    val articleList = ArrayList<com.free.grocerycoupons.network.Article>()
+                    val articleList = ArrayList<com.free.printable.coupons.network.Article>()
                     for (article in channel.articles) { //loop for all articles from API
 
                         val currentDate = Date() //current date
@@ -60,10 +60,11 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
                                 }
                             }
                             if (!isExists) { // if api item not exist in local db
-                                if (getDate(article.pubDate!!).after(thirtyDaysBackDate)) {
+                                if (getDate(article.pubDate!!)
+                                        .after(thirtyDaysBackDate)) {
 
                                     articleList.add(
-                                        com.free.grocerycoupons.network.Article(
+                                        com.free.printable.coupons.network.Article(
                                             0,
                                             article.guid,
                                             article.title,
@@ -83,10 +84,11 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
                             }
 
                         } else {
-                            if (getDate(article.pubDate!!).after(thirtyDaysBackDate)) {
+                            if (getDate(article.pubDate!!)
+                                    .after(thirtyDaysBackDate)) {
 
                                 articleList.add(
-                                    com.free.grocerycoupons.network.Article(
+                                    com.free.printable.coupons.network.Article(
                                         0,
                                         article.guid,
                                         article.title,

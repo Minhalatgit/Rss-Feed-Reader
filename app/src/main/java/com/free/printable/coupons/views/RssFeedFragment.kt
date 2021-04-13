@@ -1,4 +1,4 @@
-package com.free.grocerycoupons.views
+package com.free.printable.coupons.views
 
 import android.content.Intent
 import android.content.res.Configuration
@@ -18,8 +18,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.free.grocerycoupons.*
-import com.free.grocerycoupons.databinding.FragmentRssFeedBinding
+import com.free.printable.*
+import com.free.printable.coupons.RssFeedAdapter
+import com.free.printable.coupons.RssFeedViewModel
+import com.free.printable.coupons.addLimit
+import com.free.printable.databinding.FragmentRssFeedBinding
 
 class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
 
@@ -27,7 +30,7 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
     private lateinit var feedRecyclerView: RecyclerView
     private lateinit var rssFeedAdapter: RssFeedAdapter
 
-    private lateinit var rssFeedList: List<com.free.grocerycoupons.network.Article>
+    private lateinit var rssFeedList: List<com.free.printable.coupons.network.Article>
 
     private lateinit var viewModel: RssFeedViewModel
 
@@ -76,10 +79,14 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
 
         binding.progress.visibility = View.VISIBLE
         viewModel.rssFeedList.observe(viewLifecycleOwner, Observer {
-            (rssFeedList as ArrayList<com.free.grocerycoupons.network.Article>).clear()
+            (rssFeedList as ArrayList<com.free.printable.coupons.network.Article>).clear()
             rssFeedList = it
             binding.progress.visibility = View.GONE
-            rssFeedAdapter = RssFeedAdapter(requireActivity(), rssFeedList, this)
+            rssFeedAdapter = RssFeedAdapter(
+                requireActivity(),
+                rssFeedList,
+                this
+            )
             feedRecyclerView.adapter = rssFeedAdapter
         })
 
@@ -102,7 +109,7 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
                     showAds()
                 }
 
-                (rssFeedList as ArrayList<com.free.grocerycoupons.network.Article>).clear()
+                (rssFeedList as ArrayList<com.free.printable.coupons.network.Article>).clear()
                 rssFeedAdapter.notifyDataSetChanged()
                 binding.progress.visibility = View.VISIBLE
                 viewModel.getFeed()
