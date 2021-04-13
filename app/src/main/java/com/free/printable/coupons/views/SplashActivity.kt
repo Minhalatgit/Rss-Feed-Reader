@@ -16,7 +16,7 @@ class SplashActivity : AppCompatActivity() {
 
         //Amazon ads
         AdRegistration.setAppKey("2020b0e3aeea4c908162f3a9b43787f1")
-//        AdRegistration.enableTesting(true)
+        //AdRegistration.enableTesting(true)
         AdRegistration.enableLogging(true)
 
         Handler(Looper.getMainLooper()).postDelayed({

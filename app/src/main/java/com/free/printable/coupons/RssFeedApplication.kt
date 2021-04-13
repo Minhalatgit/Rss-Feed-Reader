@@ -23,14 +23,9 @@ class RssFeedApplication : Application() {
         AudienceNetworkAds.initialize(this)
         //admob ads
         MobileAds.initialize(this)
-        //test ad enable for my device(admob)
-        MobileAds.setRequestConfiguration(
-            RequestConfiguration.Builder().setTestDeviceIds(
-                mutableListOf("74B265AA1B8C63133239D7C1844D480A")
-            ).build()
-        )
+
         //fan test ad
-        AdSettings.addTestDevice("ad1dd237-8917-4dd3-91fb-c6e4732b3e19")
+        AdSettings.setTestMode(true)
 
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
 
