@@ -14,7 +14,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.free.printable.coupons.FaqAdapter
 import com.free.printable.coupons.QuestionAnswer
-import com.free.printable.databinding.FragmentHelpBinding
+import com.free.printable.coupons.databinding.FragmentHelpBinding
 import org.json.JSONArray
 import org.json.JSONObject
 

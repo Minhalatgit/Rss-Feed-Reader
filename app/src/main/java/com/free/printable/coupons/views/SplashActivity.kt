@@ -7,7 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import com.amazon.device.ads.AdRegistration
 import com.free.printable.coupons.PreferenceManager
-import com.free.printable.R
+import com.free.printable.coupons.R
 
 class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,6 +1,6 @@
 package com.free.printable.coupons.network
 
-import com.free.printable.BuildConfig
+import com.free.printable.coupons.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

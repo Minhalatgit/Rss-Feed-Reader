@@ -8,7 +8,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import com.free.printable.databinding.FragmentWebViewBinding
+import com.free.printable.coupons.databinding.FragmentWebViewBinding
 
 
 class WebViewFragment : Fragment() {

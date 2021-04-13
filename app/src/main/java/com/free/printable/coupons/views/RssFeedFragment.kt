@@ -19,10 +19,11 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.free.printable.*
+import com.free.printable.coupons.R
 import com.free.printable.coupons.RssFeedAdapter
 import com.free.printable.coupons.RssFeedViewModel
 import com.free.printable.coupons.addLimit
-import com.free.printable.databinding.FragmentRssFeedBinding
+import com.free.printable.coupons.databinding.FragmentRssFeedBinding
 
 class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
 

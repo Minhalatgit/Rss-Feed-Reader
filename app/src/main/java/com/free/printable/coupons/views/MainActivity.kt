@@ -26,11 +26,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.free.printable.R
 import com.free.printable.coupons.addLimit
-import com.free.printable.databinding.ActivityMainBinding
+import com.free.printable.coupons.databinding.ActivityMainBinding
 import hotchemi.android.rate.AppRate
 import org.json.JSONObject
+import com.free.printable.coupons.R
 
 class MainActivity : AppCompatActivity() {
 
