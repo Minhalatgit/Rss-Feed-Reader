@@ -7,7 +7,16 @@ import com.free.printable.coupons.network.Article
 interface ArticleDao {
 
     @Insert
-    suspend fun insert(articleList: MutableList<Article>)
+    suspend fun insertAll(articleList: MutableList<Article>)
+
+    @Insert
+    suspend fun insert(articleList: Article)
+
+    @Query("SELECT * FROM article_table WHERE guid= :guid ")
+    suspend fun itemExist(guid: String): Article?
+
+    @Delete
+    suspend fun delete(article: Article)
 
     @Query("DELETE FROM article_table")
     suspend fun clearAll()

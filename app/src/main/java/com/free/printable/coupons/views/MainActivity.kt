@@ -55,8 +55,8 @@ class MainActivity : AppCompatActivity() {
         centerTitle()
 
         AppRate.with(this)
-            .setInstallDays(1)
-            .setLaunchTimes(3)
+            .setInstallDays(0) //install day
+            .setLaunchTimes(0)
             .setRemindInterval(2)
             .monitor()
 
@@ -88,13 +88,18 @@ class MainActivity : AppCompatActivity() {
             return@setOnMenuItemClickListener true
         }
 
-        navController.addOnDestinationChangedListener { _, _, _ ->
-            addLimit++
-            if (addLimit > 4) {
-                initInterstitialAds()
-                Log.d("AddCount", "Add limit value set to $addLimit")
-                addLimit = 0
+        if (savedInstanceState == null) {
+            Log.d(TAG, "Activity is fresh")
+            navController.addOnDestinationChangedListener { _, _, _ ->
+                addLimit++
+                if (addLimit > 4) {
+                    initInterstitialAds()
+                    Log.d("AddCount", "Add limit value set to $addLimit")
+                    addLimit = 0
+                }
             }
+        } else {
+            Log.d(TAG, "Activity is not fresh")
         }
     }
 

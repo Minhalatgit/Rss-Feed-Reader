@@ -80,6 +80,7 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
 
         binding.progress.visibility = View.VISIBLE
         viewModel.rssFeedList.observe(viewLifecycleOwner, Observer {
+            Log.d("RssFeedFragment", "Item count ${it.size}")
             (rssFeedList as ArrayList<com.free.printable.coupons.network.Article>).clear()
             rssFeedList = it
             binding.progress.visibility = View.GONE
@@ -143,25 +144,31 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
     override fun onItemClick(position: Int) {
         // open external browser with item link
         addLimit++
-        if (addLimit > 4) {
-            showAds()
-        }
+
         if (rssFeedList.isNotEmpty()) {
             //check for firebase toggle whether to open inside or outside the app
             if (isOutside) {
-                //open in web view inside app
-                findNavController().navigate(
-                    RssFeedFragmentDirections.actionRssFeedFragmentToWebViewFragment(
-                        rssFeedList[position].link ?: "www.google.com"
+                if (addLimit > 4) {
+                    showAds()
+                } else {
+                    //open in web view inside app
+                    findNavController().navigate(
+                        RssFeedFragmentDirections.actionRssFeedFragmentToWebViewFragment(
+                            rssFeedList[position].link ?: "www.google.com"
+                        )
                     )
-                )
+                }
             } else {
-                requireContext().startActivity(
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(rssFeedList[position].link)
+                if (addLimit > 4) {
+                    showAds()
+                } else {
+                    requireContext().startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(rssFeedList[position].link)
+                        )
                     )
-                )
+                }
             }
         }
     }

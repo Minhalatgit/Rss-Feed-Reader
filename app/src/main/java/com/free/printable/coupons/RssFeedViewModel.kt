@@ -8,7 +8,12 @@ import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.free.printable.coupons.network.Article
 import com.free.printable.coupons.room.RoomDb
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.prof.rssparser.Parser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -19,14 +24,16 @@ import kotlin.collections.ArrayList
 
 class RssFeedViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val TAG = "RssFeedViewModel"
+
     var context: Context = application.applicationContext
 
     private var parser: Parser = Parser.Builder()
         .context(application)
         .build()
 
-    private var _rssFeedList = MutableLiveData<List<com.free.printable.coupons.network.Article>>()
-    val rssFeedList: LiveData<List<com.free.printable.coupons.network.Article>>
+    private var _rssFeedList = MutableLiveData<List<Article>>()
+    val rssFeedList: LiveData<List<Article>>
         get() = _rssFeedList
 
     fun getFeed() {
@@ -38,84 +45,97 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
                 val channel =
                     parser.getChannel("https://tools.shophermedia.net/gc-rss.asp?cp=2&afid=357373")
                 withContext(Dispatchers.Main) {
+
                     val articleListDb = dao.getArticles() //getting all from local db
-                    val articleList = ArrayList<com.free.printable.coupons.network.Article>()
-                    for (article in channel.articles) { //loop for all articles from API
 
-                        val currentDate = Date() //current date
-                        val c = Calendar.getInstance()
-                        c.time = currentDate
-                        c.add(Calendar.DATE, -30)
-                        val thirtyDaysBackDate = c.time //date to 30 days back
+                    //here we check if item exist in local db or not
+                    //if does not exist then insert, otherwise delete
+                    var i = 0
 
-                        var isExists = false
+                    if (articleListDb.isNotEmpty()) {
+                        for (article in channel.articles) {
 
-                        if (articleListDb.isNotEmpty()) { //if local database is empty
-                            for (articleDb in articleListDb) { //loop on local database list
-                                if (article.guid == articleDb.guid) { //remote data already exists in local db
-                                    isExists = true
-                                    break
-                                } else {
-                                    isExists = false
-                                }
-                            }
-                            if (!isExists) { // if api item not exist in local db
-                                if (getDate(article.pubDate!!)
-                                        .after(thirtyDaysBackDate)) {
-
-                                    articleList.add(
-                                        com.free.printable.coupons.network.Article(
-                                            0,
-                                            article.guid,
-                                            article.title,
-                                            article.author,
-                                            article.link,
-                                            article.pubDate,
-                                            article.description,
-                                            article.content,
-                                            article.image,
-                                            article.audio,
-                                            article.video,
-                                            article.sourceName,
-                                            article.sourceUrl
-                                        )
-                                    )
-                                }
-                            }
-
-                        } else {
-                            if (getDate(article.pubDate!!)
-                                    .after(thirtyDaysBackDate)) {
-
-                                articleList.add(
-                                    com.free.printable.coupons.network.Article(
-                                        0,
-                                        article.guid,
-                                        article.title,
-                                        article.author,
-                                        article.link,
-                                        article.pubDate,
-                                        article.description,
-                                        article.content,
-                                        article.image,
-                                        article.audio,
-                                        article.video,
-                                        article.sourceName,
-                                        article.sourceUrl
-                                    )
+                            if (dao.itemExist(article.guid!!) == null) {
+                                Log.d(TAG, "item does not exists in feed")
+                                val articleToInsert = Article(
+                                    0,
+                                    article.guid,
+                                    article.title,
+                                    article.author,
+                                    article.link,
+                                    article.pubDate,
+                                    article.description,
+                                    article.content,
+                                    article.image,
+                                    article.audio,
+                                    article.video,
+                                    article.sourceName,
+                                    article.sourceUrl
                                 )
+                                dao.insert(articleToInsert)
+                            } else {
+                                Log.d(TAG, "item exist in feed")
                             }
+                        }
+                    } else { //local db is empty(first time opening app)
+                        for (article in channel.articles) { //loop for all articles from API
+                            val articleToInsert = Article(
+                                0,
+                                article.guid,
+                                article.title,
+                                article.author,
+                                article.link,
+                                article.pubDate,
+                                article.description,
+                                article.content,
+                                article.image,
+                                article.audio,
+                                article.video,
+                                article.sourceName,
+                                article.sourceUrl
+                            )
+                            dao.insert(articleToInsert)
                         }
                     }
 
-                    dao.insert(articleList)
+//                    FirebaseDatabase.getInstance().reference.child("days")
+//                        .addListenerForSingleValueEvent(object : ValueEventListener {
+//                            override fun onCancelled(error: DatabaseError) {
+//                                Log.e(TAG, "onCancelled: ${error.message}")
+//                            }
+//
+//                            override fun onDataChange(snapshot: DataSnapshot) {
+//                                Log.d(TAG, "onDataChange: ${snapshot.value}")
+//                            }
+//
+//                        })
+
+                    //get all data from local and check if is 30 day old;
+                    //those who are not old, delete them
+
+                    val currentDate = Date() //current date
+                    val c = Calendar.getInstance()
+                    c.time = currentDate
+                    c.add(Calendar.DATE, -30)
+                    val thirtyDaysBackDate = c.time //Aj se 30 din pehle ki date nikaal li
+
+                    for (article in dao.getArticles()) {
+//                        Log.d(TAG, "Guid of feed from local: ${article.guid}")
+                        if (getDate(article.pubDate!!).before(thirtyDaysBackDate)) {
+                            //article ki date 30 din pehle ki date se pehle ki hai, so removing it
+                            dao.delete(article)
+                        } else {
+                            //article ki date 30 din pehle ki date se agay ki hai, so keeping it
+                        }
+                    }
+
                     _rssFeedList.value = dao.getArticles()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     _rssFeedList.value = dao.getArticles()
                 }
-                Log.d("RssViewModel", "getFeed failed ${e.message}")
+                Log.d(TAG, "getFeed failed ${e.message}")
                 withContext(Dispatchers.Main) {
                     val toast = Toast.makeText(
                         context,

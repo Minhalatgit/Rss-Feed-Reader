@@ -9,6 +9,7 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.firebase.FirebaseApp
 import com.onesignal.OneSignal
+import java.util.*
 
 class RssFeedApplication : Application() {
 
@@ -23,6 +24,8 @@ class RssFeedApplication : Application() {
         AudienceNetworkAds.initialize(this)
         //admob ads
         MobileAds.initialize(this)
+
+        //RequestConfiguration.Builder().setTestDeviceIds(Arrays.asList("74B265AA1B8C63133239D7C1844D480A"))
 
         //fan test ad
         AdSettings.setTestMode(true)
