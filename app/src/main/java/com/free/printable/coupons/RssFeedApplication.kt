@@ -6,10 +6,8 @@ import android.util.Log
 import com.facebook.ads.AdSettings
 import com.facebook.ads.AudienceNetworkAds
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.RequestConfiguration
 import com.google.firebase.FirebaseApp
 import com.onesignal.OneSignal
-import java.util.*
 
 class RssFeedApplication : Application() {
 

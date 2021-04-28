@@ -1,7 +1,6 @@
 package com.free.printable.coupons
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import java.lang.Exception
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
 
 class RssFeedAdapter(
     private val context: Context,
@@ -30,7 +26,7 @@ class RssFeedAdapter(
         val progress: ProgressBar = itemView.findViewById(R.id.progressBar)
 
         init {
-            itemView.setOnClickListener(this)
+            thumbnail.setOnClickListener(this)
         }
 
         override fun onClick(v: View?) {
@@ -48,7 +44,7 @@ class RssFeedAdapter(
     override fun onBindViewHolder(holder: RssFeedHolder, position: Int) {
         val rssFeed = rssFeedList[position]
 
-        holder.date.text = getFormattedDated(rssFeed.pubDate ?: "")
+        holder.date.text = getDateString(rssFeed.pubDate!!)
         holder.progress.visibility = View.VISIBLE
         if (rssFeed.image != "") {
             Picasso.get().load(rssFeed.image).into(holder.thumbnail, object : Callback {
@@ -61,31 +57,6 @@ class RssFeedAdapter(
                 }
 
             })
-        }
-        holder.itemView.setOnClickListener {
-            listener.onItemClick(position)
-        }
-    }
-
-    private fun getFormattedDated(date: String): String {
-
-        if (!date.equals("", true)) {
-            val formatIn = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z")
-            val formatOut = SimpleDateFormat("EEE, dd MMM yyyy @ HH:mm")
-            val finalDateString: String
-            var formattedDate: Date? = null
-            try {
-                formattedDate = formatIn.parse(date)
-            } catch (e: ParseException) {
-                e.printStackTrace()
-            }
-
-            finalDateString = if (formattedDate != null) formatOut.format(formattedDate) else date
-
-            Log.d("RssFeedAdapter", "getFormattedDated: $finalDateString")
-            return finalDateString
-        } else {
-            return ""
         }
     }
 

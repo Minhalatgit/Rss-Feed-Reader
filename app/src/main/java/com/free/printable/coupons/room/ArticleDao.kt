@@ -21,7 +21,7 @@ interface ArticleDao {
     @Query("DELETE FROM article_table")
     suspend fun clearAll()
 
-    @Query("SELECT * FROM article_table")
+    @Query("SELECT * FROM article_table ORDER BY pubDate DESC")
     suspend fun getArticles(): List<Article>
 
 }

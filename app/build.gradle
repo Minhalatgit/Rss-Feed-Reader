@@ -87,6 +87,9 @@ dependencies {
     // Firebase database
     implementation 'com.google.firebase:firebase-database'
 
+    //Firebase Analytics
+    implementation 'com.google.firebase:firebase-analytics'
+
     // FAN mediation
     implementation 'com.google.ads.mediation:facebook:6.3.0.0'
 

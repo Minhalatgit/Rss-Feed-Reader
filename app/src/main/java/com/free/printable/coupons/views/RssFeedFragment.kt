@@ -14,15 +14,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.free.printable.coupons.*
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.free.printable.*
-import com.free.printable.coupons.R
-import com.free.printable.coupons.RssFeedAdapter
-import com.free.printable.coupons.RssFeedViewModel
-import com.free.printable.coupons.addLimit
 import com.free.printable.coupons.databinding.FragmentRssFeedBinding
 
 class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
@@ -106,8 +102,9 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.reload -> {
-                addLimit++
-                if (addLimit > 4) {
+                adLimit++
+                Log.d("AddCount", "Reload, Ad Count $adLimit")
+                if (adLimit > AD_COUNTER) {
                     showAds()
                 }
 
@@ -143,23 +140,13 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
 
     override fun onItemClick(position: Int) {
         // open external browser with item link
-        addLimit++
+        adLimit++
+        Log.d("AddCount", "Coupon click, Ad Count $adLimit")
 
         if (rssFeedList.isNotEmpty()) {
             //check for firebase toggle whether to open inside or outside the app
             if (isOutside) {
-                if (addLimit > 4) {
-                    showAds()
-                } else {
-                    //open in web view inside app
-                    findNavController().navigate(
-                        RssFeedFragmentDirections.actionRssFeedFragmentToWebViewFragment(
-                            rssFeedList[position].link ?: "www.google.com"
-                        )
-                    )
-                }
-            } else {
-                if (addLimit > 4) {
+                if (adLimit > AD_COUNTER) {
                     showAds()
                 } else {
                     requireContext().startActivity(
@@ -169,13 +156,24 @@ class RssFeedFragment : Fragment(), RssFeedAdapter.ItemClickListener {
                         )
                     )
                 }
+            } else {
+                if (adLimit > AD_COUNTER) {
+                    showAds()
+                } else {
+                    //open in web view inside app
+                    findNavController().navigate(
+                        RssFeedFragmentDirections.actionRssFeedFragmentToWebViewFragment(
+                            rssFeedList[position].link ?: "www.google.com"
+                        )
+                    )
+                }
             }
         }
     }
 
     private fun showAds() {
         (activity as MainActivity).initInterstitialAds()
-        Log.d("AddCount", "Add limit value set to $addLimit")
-        addLimit = 0
+        Log.d("AddCount", "Ad limit value set to $adLimit")
+        adLimit = 0
     }
 }

@@ -2,6 +2,7 @@ package com.free.printable.coupons.views
 
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -17,20 +18,22 @@ import androidx.navigation.ui.NavigationUI
 import com.amazon.device.ads.AdLayout
 import com.amazon.device.ads.AdProperties
 import com.facebook.ads.*
+import com.free.printable.coupons.AD_COUNTER
+import com.free.printable.coupons.R
+import com.free.printable.coupons.adLimit
+import com.free.printable.coupons.databinding.ActivityMainBinding
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.free.printable.coupons.addLimit
-import com.free.printable.coupons.databinding.ActivityMainBinding
 import hotchemi.android.rate.AppRate
 import org.json.JSONObject
-import com.free.printable.coupons.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,6 +47,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var amazonAdView: AdLayout
     private lateinit var amazonInterstitial: com.amazon.device.ads.InterstitialAd
 
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
     private val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,12 +57,23 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = binding.drawerLayout
         navView = binding.navView
 
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+
+//        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM,)
+
         centerTitle()
 
         AppRate.with(this)
             .setInstallDays(0) //install day
-            .setLaunchTimes(0)
-            .setRemindInterval(2)
+            .setLaunchTimes(3)
+            .setRemindInterval(3)
+            .setOnClickButtonListener {
+                Log.d(TAG, "Button clicked $it")
+
+//                if (it == -1 || it == -2) {
+//                    AppRate.with(this).clearAgreeShowDialog()
+//                }
+            }
             .monitor()
 
         AppRate.showRateDialogIfMeetsConditions(this)
@@ -80,26 +96,34 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(navView, navController)
         NavigationUI.setupActionBarWithNavController(this, navController, drawerLayout)
 
+        adLimit = 0
+        navView.setNavigationItemSelectedListener { dest ->
+
+            NavigationUI.onNavDestinationSelected(dest, navController)
+            drawerLayout.closeDrawers()
+            adLimit++
+            Log.d("AddCount", "Menu item, Ad Count $adLimit")
+            if (adLimit > AD_COUNTER) {
+                initInterstitialAds()
+                Log.d("AddCount", "Add limit value set to $adLimit")
+                adLimit = 0
+            }
+            true
+        }
+
         navView.menu.findItem(R.id.rateUs).setOnMenuItemClickListener {
+            adLimit++
+            Log.d("AddCount", "Rate item, Ad Count $adLimit")
+            if (adLimit > AD_COUNTER) {
+                initInterstitialAds()
+                Log.d("AddCount", "Add limit value set to $adLimit")
+                adLimit = 0
+            }
             showAlert()
             if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                 drawerLayout.closeDrawer(GravityCompat.START)
             }
             return@setOnMenuItemClickListener true
-        }
-
-        if (savedInstanceState == null) {
-            Log.d(TAG, "Activity is fresh")
-            navController.addOnDestinationChangedListener { _, _, _ ->
-                addLimit++
-                if (addLimit > 4) {
-                    initInterstitialAds()
-                    Log.d("AddCount", "Add limit value set to $addLimit")
-                    addLimit = 0
-                }
-            }
-        } else {
-            Log.d(TAG, "Activity is not fresh")
         }
     }
 

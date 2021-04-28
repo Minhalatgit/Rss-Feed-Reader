@@ -50,7 +50,6 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
 
                     //here we check if item exist in local db or not
                     //if does not exist then insert, otherwise delete
-                    var i = 0
 
                     if (articleListDb.isNotEmpty()) {
                         for (article in channel.articles) {
@@ -63,7 +62,7 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
                                     article.title,
                                     article.author,
                                     article.link,
-                                    article.pubDate,
+                                    getDate(article.pubDate!!).time,
                                     article.description,
                                     article.content,
                                     article.image,
@@ -85,7 +84,7 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
                                 article.title,
                                 article.author,
                                 article.link,
-                                article.pubDate,
+                                getDate(article.pubDate!!).time,
                                 article.description,
                                 article.content,
                                 article.image,
@@ -122,7 +121,7 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
                     for (article in dao.getArticles()) {
 //                        Log.d(TAG, "Guid of feed from local: ${article.guid}")
                         if (getDate(article.pubDate!!).before(thirtyDaysBackDate)) {
-                            //article ki date 30 din pehle ki date se pehle ki hai, so removing it
+//                            //article ki date 30 din pehle ki date se pehle ki hai, so removing it
                             dao.delete(article)
                         } else {
                             //article ki date 30 din pehle ki date se agay ki hai, so keeping it
@@ -143,7 +142,6 @@ class RssFeedViewModel(application: Application) : AndroidViewModel(application)
                         Toast.LENGTH_LONG
                     )
                     toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0)
-//                    toast.view.background=
                     toast.show()
                 }
             }
